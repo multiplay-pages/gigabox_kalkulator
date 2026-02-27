@@ -380,6 +380,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  document.querySelectorAll('[data-go-step]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const targetStep = Number(button.dataset.goStep);
+      goToStep(targetStep);
+      refresh();
+
+      const targetPanel = document.getElementById(`step${targetStep}`);
+      if (targetPanel) {
+        targetPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
   document.getElementById('prevBtn').addEventListener('click', () => {
     changeStep(-1);
     refresh();
