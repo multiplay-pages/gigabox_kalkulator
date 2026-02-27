@@ -405,11 +405,13 @@ img {
 
 .slider-card {
   --slider-thumb-size: 18px;
+  --slider-side-offset: calc(var(--slider-thumb-size) / 2);
 }
 
 .slider-card input[type='range'] {
-  width: 100%;
-  margin: 14px 0 8px;
+  display: block;
+  width: calc(100% - var(--slider-thumb-size));
+  margin: 14px var(--slider-side-offset) 8px;
   appearance: none;
   -webkit-appearance: none;
   background: transparent;
@@ -453,21 +455,19 @@ img {
 .slider-scale {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  padding-inline: calc(var(--slider-thumb-size) / 2);
+  width: calc(100% - var(--slider-thumb-size));
+  margin: 4px var(--slider-side-offset) 0;
   font-size: 0.8rem;
   color: var(--text-soft);
 }
 
 .slider-scale span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  line-height: 1;
   text-align: center;
-}
-
-.slider-scale span:first-child {
-  transform: translateX(-2px);
-}
-
-.slider-scale span:last-child {
-  transform: translateX(2px);
 }
 
 .slider-value {
