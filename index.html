@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kalkulator Oferty GigaBOX 3.1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-badge">✨ Wersja 3.1 • osobne pliki • GitHub Pages ready</div>
+
+      <div class="hero-brand">
+        <img
+          class="hero-logo"
+          src="https://multiplay-pages.github.io/giganet_kalkulator/logo_multiplay_new.svg"
+          alt="Multiplay"
+        />
+      </div>
+
+      <h1>Kalkulator Oferty GigaBOX 3.1</h1>
+      <p class="hero-lead">
+        Premium / Canva-like, w tym samym kierunku wizualnym co kalkulator GigaNET:
+        większe kafle, czytelny podział sekcji, porządne podsumowanie i mniej chaosu.
+      </p>
+
+      <div class="hero-highlights">
+        <div class="hero-highlight-card">
+          <span class="hero-highlight-label">Konfiguracja</span>
+          <strong>Klikasz i liczysz</strong>
+        </div>
+        <div class="hero-highlight-card">
+          <span class="hero-highlight-label">Kod</span>
+          <strong>HTML + CSS + JS</strong>
+        </div>
+        <div class="hero-highlight-card">
+          <span class="hero-highlight-label">Publikacja</span>
+          <strong>GitHub Pages</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout-grid">
+      <section class="main-column">
+        <nav class="progress-nav" aria-label="Kroki konfiguracji">
+          <button type="button" class="progress-step active" data-step="1">1</button>
+          <button type="button" class="progress-step" data-step="2">2</button>
+          <button type="button" class="progress-step" data-step="3">3</button>
+          <button type="button" class="progress-step" data-step="4">4</button>
+          <button type="button" class="progress-step" data-step="5">5</button>
+        </nav>
+
+        <div id="step1" class="step-panel">
+          <div class="step-kicker">1</div>
+          <h2>Parametry oferty</h2>
+          <p class="step-lead">Tu ustawiasz bazę, czyli szkielet całej wyceny.</p>
+
+          <div class="section-block">
+            <h3>Okres umowy</h3>
+            <div class="option-grid two-col">
+              <label class="option-card">
+                <input type="radio" name="contractPeriod" value="12" />
+                <span class="option-icon">⏱️</span>
+                <span class="option-title">12 miesięcy</span>
+                <span class="option-subtitle">krótsze zobowiązanie</span>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="contractPeriod" value="24" checked />
+                <span class="option-icon">⏳</span>
+                <span class="option-title">24 miesiące</span>
+                <span class="option-subtitle">lepsza cena</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <h3>Typ budynku</h3>
+            <div class="option-grid two-col">
+              <label class="option-card">
+                <input type="radio" name="buildingType" value="SFH" checked />
+                <span class="option-icon">🏡</span>
+                <span class="option-title">Domek (SFH)</span>
+                <span class="option-subtitle">jednorodzinny</span>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="buildingType" value="MFH" />
+                <span class="option-icon">🏢</span>
+                <span class="option-title">Blok (MFH)</span>
+                <span class="option-subtitle">wielorodzinny</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <h3>Status klienta</h3>
+            <div class="option-grid two-col">
+              <label class="option-card">
+                <input type="radio" name="customerStatus" value="new" checked />
+                <span class="option-icon">✨</span>
+                <span class="option-title">Nowy klient</span>
+                <span class="option-subtitle">pierwsza umowa</span>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="customerStatus" value="existing" />
+                <span class="option-icon">♻️</span>
+                <span class="option-title">Obecny klient</span>
+                <span class="option-subtitle">przedłużenie / zmiana</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <h3>Taryfa internetowa</h3>
+            <div class="option-grid two-col">
+              <label class="option-card price-card">
+                <input type="radio" name="internetSpeed" value="600/100" checked />
+                <span class="option-title">600 / 100</span>
+                <span class="option-subtitle">solidny standard</span>
+                <strong id="price-600-100">Net* 5,01 zł / mies.</strong>
+              </label>
+              <label class="option-card price-card">
+                <input type="radio" name="internetSpeed" value="800/200" />
+                <span class="option-title">800 / 200</span>
+                <span class="option-subtitle">szybciej</span>
+                <strong id="price-800-200">Net* 10,01 zł / mies.</strong>
+              </label>
+              <label class="option-card price-card">
+                <input type="radio" name="internetSpeed" value="1000/300" />
+                <span class="option-icon">⚡</span>
+                <span class="option-title">1000 / 300</span>
+                <span class="option-subtitle">mocniej</span>
+                <strong id="price-1000-300">Net* 15,01 zł / mies.</strong>
+              </label>
+              <label class="option-card price-card">
+                <input type="radio" name="internetSpeed" value="2000/2000" />
+                <span class="option-title">2000 / 2000</span>
+                <span class="option-subtitle">pełne turbo</span>
+                <strong id="price-2000-2000">Net* 70,01 zł / mies.</strong>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div id="step2" class="step-panel hidden">
+          <div class="step-kicker">2</div>
+          <h2>Zgody i dodatki TV</h2>
+          <p class="step-lead">Rabat jest miły. Brak rabatu już trochę mniej.</p>
+
+          <div class="section-block">
+            <h3>Zgody</h3>
+            <div class="option-grid one-col">
+              <label class="option-card horizontal-card compact-card">
+                <div class="option-main">
+                  <input type="checkbox" id="eInvoice" checked />
+                  <div>
+                    <span class="option-title">E-faktura</span>
+                    <span class="option-subtitle">rabat 10 zł / mies.</span>
+                  </div>
+                </div>
+                <strong>-10,00 zł</strong>
+              </label>
+              <label class="option-card horizontal-card compact-card">
+                <div class="option-main">
+                  <input type="checkbox" id="marketing" checked />
+                  <div>
+                    <span class="option-title">Zgoda marketingowa</span>
+                    <span class="option-subtitle">rabat 5 zł / mies.</span>
+                  </div>
+                </div>
+                <strong>-5,00 zł</strong>
+              </label>
+            </div>
+            <div class="info-note warning-note">
+              Brak e-faktury = +10 zł / mies. • Brak zgody marketingowej = +5 zł / mies.
+            </div>
+          </div>
+
+          <div class="section-block" id="symmetricSection">
+            <h3>Dodatki włącz / wyłącz</h3>
+            <div class="option-grid one-col">
+              <label class="option-card horizontal-card compact-card">
+                <div class="option-main">
+                  <input type="checkbox" id="symmetricConnection" />
+                  <div>
+                    <span class="option-title">Łącze symetryczne</span>
+                    <span class="option-subtitle">10 zł / mies.</span>
+                  </div>
+                </div>
+                <strong>+10,00 zł</strong>
+              </label>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <h3>TV Multi</h3>
+            <div class="mandatory-card">
+              <div>
+                <span class="option-title">TV Multi (obowiązkowe)</span>
+                <span class="option-subtitle">podstawa pakietu GigaBOX</span>
+              </div>
+              <strong>109,97 zł / mies.</strong>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <h3>Multiroom</h3>
+            <div class="slider-card">
+              <label for="multiroomCount">Liczba sztuk (0–5)</label>
+              <input type="range" id="multiroomCount" min="0" max="5" value="0" />
+              <div class="slider-scale"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+              <div class="slider-value" id="multiroomCountDisplay">0 szt.</div>
+
+              <div id="multiroomActivation" class="hidden nested-block">
+                <h4>Wariant aktywacji</h4>
+                <div class="option-grid two-col">
+                  <label class="option-card compact-card">
+                    <input type="radio" name="multiroomActivationType" value="selfinstall" checked />
+                    <span class="option-title">Samodzielna instalacja</span>
+                  </label>
+                  <label class="option-card compact-card">
+                    <input type="radio" name="multiroomActivationType" value="assistance" />
+                    <span class="option-title">Asysta techniczna</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="price-mini-box">
+                <div><span>Abonament</span><strong>15,00 zł / szt. / mies.</strong></div>
+                <div><span>Aktywacja</span><strong>99,00 zł / szt.</strong></div>
+                <div><span>Asysta</span><strong>+100,00 zł jednorazowo</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <h3>Dodatki TV</h3>
+            <div class="option-grid two-col">
+              <label class="option-card horizontal-card compact-card">
+                <div class="option-main">
+                  <input type="checkbox" name="tvAddons" value="pvrM" />
+                  <span class="option-title">PVR M</span>
+                </div>
+                <strong>10,00 zł</strong>
+              </label>
+              <label class="option-card horizontal-card compact-card">
+                <div class="option-main">
+                  <input type="checkbox" name="tvAddons" value="pvrL" />
+                  <span class="option-title">PVR L</span>
+                </div>
+                <strong>15,00 zł</strong>
+              </label>
+              <label class="option-card horizontal-card compact-card full-span">
+                <div class="option-main">
+                  <input type="checkbox" name="tvAddons" value="tvMax" />
+                  <span class="option-title">TV Max</span>
+                </div>
+                <strong>40,00 zł</strong>
+              </label>
+            </div>
+          </div>
+
+          <div class="section-block hidden" id="canalPlusSection">
+            <h3>Pakiety Canal+ (tylko na umowę 12 miesięcy)</h3>
+            <div class="option-grid one-col">
+              <label class="option-card compact-card">
+                <input type="checkbox" name="canalPlus" value="canalSport" />
+                <span class="option-title">Canal+ Super Sport</span>
+                <span class="option-subtitle">pakiet sportowy</span>
+                <strong>64,99 zł / mies.</strong>
+              </label>
+              <label class="option-card compact-card">
+                <input type="checkbox" name="canalPlus" value="canalMovies" />
+                <span class="option-title">Canal+ Seriale i Filmy</span>
+                <span class="option-subtitle">pakiet filmowo-serialowy</span>
+                <strong>24,99 zł / mies.</strong>
+              </label>
+            </div>
+            <div class="info-note warning-note">Możesz wybrać tylko jeden pakiet Canal+.</div>
+          </div>
+        </div>
+
+        <div id="step3" class="step-panel hidden">
+          <div class="step-kicker">3</div>
+          <h2>Dodatki Internet i bezpieczeństwo</h2>
+          <p class="step-lead">Tu zaczynają się dodatki, promocje i inne małe potwory abonamentowe.</p>
+
+          <div class="section-block">
+            <h3>WiFi Premium</h3>
+            <div class="slider-card">
+              <label for="wifiCount">Liczba sztuk (0–5)</label>
+              <input type="range" id="wifiCount" min="0" max="5" value="0" />
+              <div class="slider-scale"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+              <div class="slider-value" id="wifiCountDisplay">0 szt.</div>
+              <div class="price-mini-box two-line-box">
+                <div><span>Abonament</span><strong>20,00 zł / mies.</strong></div>
+                <div><span>Aktywacja</span><strong>89,00 zł / szt.</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <h3>Internet+</h3>
+            <div class="option-grid one-col">
+              <label class="option-card horizontal-card compact-card">
+                <div class="option-main">
+                  <input type="checkbox" name="internetAddons" value="internetPlus" />
+                  <div>
+                    <span class="option-title">Internet+</span>
+                    <span class="option-subtitle">10 zł / mies.</span>
+                  </div>
+                </div>
+                <strong>+10,00 zł</strong>
+              </label>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <h3>Pakiet bezpieczeństwa (1 wariant lub kilka, jeśli chcesz testowo)</h3>
+            <div class="option-grid two-col">
+              <label class="option-card compact-card">
+                <input type="checkbox" name="bitdefender" value="internetSecurity1" />
+                <span class="option-title">Internet Security 1</span>
+                <span class="option-subtitle">9,00 zł / mies.</span>
+              </label>
+              <label class="option-card compact-card">
+                <input type="checkbox" name="bitdefender" value="internetSecurity3" />
+                <span class="option-title">Internet Security 3</span>
+                <span class="option-subtitle">14,99 zł / mies.</span>
+              </label>
+              <label class="option-card compact-card">
+                <input type="checkbox" name="bitdefender" value="mobileSecurity" />
+                <span class="option-title">Mobile</span>
+                <span class="option-subtitle">6,00 zł / mies.</span>
+              </label>
+              <label class="option-card compact-card">
+                <input type="checkbox" name="bitdefender" value="familyPack" />
+                <span class="option-title">Pakiet rodzinny</span>
+                <span class="option-subtitle">20,00 zł / mies.</span>
+              </label>
+              <label class="option-card compact-card">
+                <input type="checkbox" name="bitdefender" value="antivirusMac1" />
+                <span class="option-title">Mac 1</span>
+                <span class="option-subtitle">9,00 zł / mies.</span>
+              </label>
+              <label class="option-card compact-card">
+                <input type="checkbox" name="bitdefender" value="antivirusMac3" />
+                <span class="option-title">Mac 3</span>
+                <span class="option-subtitle">14,99 zł / mies.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div id="step4" class="step-panel hidden">
+          <div class="step-kicker">4</div>
+          <h2>Telefon stacjonarny</h2>
+          <p class="step-lead">Opcjonalnie. Czyli bez presji, bez dramatu.</p>
+
+          <div class="section-block">
+            <div class="option-grid one-col">
+              <label class="option-card horizontal-card compact-card">
+                <div class="option-main">
+                  <input type="checkbox" id="phoneService" />
+                  <div>
+                    <span class="option-title">NoLimit Max</span>
+                    <span class="option-subtitle">Telefon bez limitu</span>
+                  </div>
+                </div>
+                <strong>9,99 zł / mies.</strong>
+              </label>
+            </div>
+            <div class="info-note">Usługa telefoniczna dostępna tylko przy aktywnym Internecie.</div>
+          </div>
+        </div>
+
+        <div id="step5" class="step-panel hidden">
+          <div class="step-kicker">5</div>
+          <h2>Cena końcowa</h2>
+          <p class="step-lead">Transparentny breakdown. Bez magii, bez czarów, tylko liczby.</p>
+
+          <div class="summary-stack">
+            <div class="summary-box">
+              <h3>Rozpiska miesięczna</h3>
+              <div id="basicServices" class="summary-group"></div>
+              <div id="tvAddonsSection" class="summary-subgroup hidden">
+                <h4>Dodatki TV</h4>
+                <div id="tvAddonsList"></div>
+              </div>
+              <div id="internetAddonsSection" class="summary-subgroup hidden">
+                <h4>Dodatki Internet i bezpieczeństwo</h4>
+                <div id="internetAddonsList"></div>
+              </div>
+              <div id="phoneSection" class="summary-subgroup hidden">
+                <h4>Telefon</h4>
+                <div id="phoneList"></div>
+              </div>
+              <div class="summary-total-row">
+                <span>Razem miesięcznie</span>
+                <strong id="totalMonthly">0,00 zł</strong>
+              </div>
+            </div>
+
+            <div class="summary-box">
+              <h3>Opłaty jednorazowe</h3>
+              <div id="oneTimeSummary" class="summary-group"></div>
+              <div class="summary-total-row single-tone">
+                <span>Razem jednorazowo</span>
+                <strong id="totalOneTime">0,00 zł</strong>
+              </div>
+            </div>
+
+            <div class="summary-box info-box">
+              <h3>Parametry konfiguracji</h3>
+              <div id="contractInfo" class="summary-group"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-actions">
+          <button id="prevBtn" class="btn btn-secondary" type="button" disabled>← Wstecz</button>
+          <button id="nextBtn" class="btn btn-primary" type="button">Dalej →</button>
+        </div>
+      </section>
+
+      <aside class="sidebar-column">
+        <div class="sidebar-card">
+          <div class="sidebar-kicker">Podsumowanie oferty</div>
+          <h3>Cena końcowa</h3>
+
+          <div class="sidebar-summary-block">
+            <div class="sidebar-summary-head">
+              <span>Premium UI</span>
+              <strong>Miesięcznie</strong>
+            </div>
+            <div id="sidebarMonthly" class="sidebar-list"></div>
+            <div class="sidebar-total">
+              <span>Razem</span>
+              <strong id="sidebarTotalMonthly">0,00 zł</strong>
+            </div>
+          </div>
+
+          <div class="sidebar-summary-block">
+            <div class="sidebar-summary-head">
+              <span>Aktywacje</span>
+              <strong>Jednorazowo</strong>
+            </div>
+            <div id="sidebarOneTime" class="sidebar-list"></div>
+            <div class="sidebar-total green-total">
+              <span>Razem</span>
+              <strong id="sidebarTotalOneTime">0,00 zł</strong>
+            </div>
+          </div>
+
+          <div class="sidebar-footer-note">
+            Najprostsza decyzja: konfigurujesz, pokazujesz klientowi cenę i gotowe.
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
