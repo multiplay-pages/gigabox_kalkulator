@@ -403,21 +403,71 @@ img {
   font-weight: 800;
 }
 
+.slider-card {
+  --slider-thumb-size: 18px;
+}
+
 .slider-card input[type='range'] {
   width: 100%;
   margin: 14px 0 8px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
   accent-color: var(--primary);
+}
+
+.slider-card input[type='range']::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(49, 83, 255, 0.18), rgba(49, 83, 255, 0.14));
+  border: 1px solid rgba(199, 215, 255, 0.95);
+}
+
+.slider-card input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  margin-top: calc((6px - var(--slider-thumb-size)) / 2);
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: linear-gradient(135deg, var(--primary), #5f77ff);
+  box-shadow: 0 8px 18px rgba(49, 83, 255, 0.26);
+}
+
+.slider-card input[type='range']::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(49, 83, 255, 0.18), rgba(49, 83, 255, 0.14));
+  border: 1px solid rgba(199, 215, 255, 0.95);
+}
+
+.slider-card input[type='range']::-moz-range-thumb {
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: linear-gradient(135deg, var(--primary), #5f77ff);
+  box-shadow: 0 8px 18px rgba(49, 83, 255, 0.26);
 }
 
 .slider-scale {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding-inline: calc(var(--slider-thumb-size) / 2);
   font-size: 0.8rem;
   color: var(--text-soft);
 }
 
+.slider-scale span {
+  text-align: center;
+}
+
+.slider-scale span:first-child {
+  transform: translateX(-2px);
+}
+
 .slider-scale span:last-child {
-  justify-self: end;
+  transform: translateX(2px);
 }
 
 .slider-value {
@@ -532,8 +582,22 @@ img {
 .sidebar-header,
 .mobile-drawer-header {
   justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 14px;
   margin-bottom: 16px;
+}
+
+.sidebar-header > div,
+.mobile-drawer-header > div {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.sidebar-header .btn,
+.mobile-drawer-header .btn {
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .sidebar-section + .sidebar-section {

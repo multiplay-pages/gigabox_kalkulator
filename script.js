@@ -194,7 +194,11 @@ function calculateTotals() {
   });
 
   if (config.canalPlus) {
-    monthlyItems.push({ label: labels.canalPlus[config.canalPlus], value: pricing.canalPlus[config.canalPlus], group: 'tv' });
+    monthlyItems.push({
+      label: `${labels.canalPlus[config.canalPlus]} (zobowiązanie 12 mies.)`,
+      value: pricing.canalPlus[config.canalPlus],
+      group: 'tv',
+    });
   }
 
   if (config.wifiCount > 0) {
@@ -309,15 +313,7 @@ function refreshSelectionStates() {
 }
 
 function updateCanalPlusVisibility() {
-  const shouldShow = config.contractPeriod === '12';
-  elements.canalPlusSection.classList.toggle('hidden', !shouldShow);
-
-  if (!shouldShow) {
-    config.canalPlus = null;
-    document.querySelectorAll('input[name="canalPlus"]').forEach((input) => {
-      input.checked = false;
-    });
-  }
+  elements.canalPlusSection.classList.remove('hidden');
 }
 
 function updateSymmetricVisibility() {
@@ -566,12 +562,16 @@ function bindEvents() {
   });
 
   elements.multiroomCount.addEventListener('input', (event) => {
-    config.multiroomCount = Number(event.target.value);
+    const snapped = Math.round(Number(event.target.value));
+    event.target.value = String(snapped);
+    config.multiroomCount = snapped;
     refresh();
   });
 
   elements.wifiCount.addEventListener('input', (event) => {
-    config.wifiCount = Number(event.target.value);
+    const snapped = Math.round(Number(event.target.value));
+    event.target.value = String(snapped);
+    config.wifiCount = snapped;
     refresh();
   });
 
