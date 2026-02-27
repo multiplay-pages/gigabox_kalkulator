@@ -1,0 +1,78 @@
+{
+  "prices": {
+    "internetBase": {
+      "600/100": 5.01,
+      "800/200": 10.01,
+      "1000/300": 15.01,
+      "2000/2000": 70.01
+    },
+    "equipmentRent": {
+      "SFH": {
+        "12": 5.02,
+        "24": 0.02
+      },
+      "MFH": {
+        "12": 5.01,
+        "24": 0.01
+      }
+    },
+    "lineMaintenance": {
+      "SFH": 20.0,
+      "MFH": 0.01
+    },
+    "tvMulti": 109.97,
+    "installation": {
+      "new": 249.0,
+      "existing": 0.0
+    },
+    "symmetricConnection": 10.0,
+    "multiroomMonthly": 15.0,
+    "multiroomActivation": 99.0,
+    "multiroomAssistance": 100.0,
+    "wifiMonthly": 20.0,
+    "wifiActivation": 89.0,
+    "phoneService": 9.99,
+    "tvAddons": {
+      "pvrM": 10.0,
+      "pvrL": 15.0,
+      "tvMax": 40.0
+    },
+    "internetAddons": {
+      "internetPlus": 10.0
+    },
+    "bitdefender": {
+      "internetSecurity1": 9.0,
+      "internetSecurity3": 14.99,
+      "mobileSecurity": 6.0,
+      "familyPack": 20.0,
+      "antivirusMac1": 9.0,
+      "antivirusMac3": 14.99
+    },
+    "canalPlus": {
+      "canalSport": 64.99,
+      "canalMovies": 24.99
+    }
+  },
+  "labels": {
+    "tvAddons": {
+      "pvrM": "PVR M",
+      "pvrL": "PVR L",
+      "tvMax": "TV Max"
+    },
+    "internetAddons": {
+      "internetPlus": "Internet+"
+    },
+    "bitdefender": {
+      "internetSecurity1": "Internet Security (1 stanowisko)",
+      "internetSecurity3": "Bezpieczeństwo w Internecie (3 stanowiska)",
+      "mobileSecurity": "Bezpieczeństwo mobilne",
+      "familyPack": "Pakiet rodzinny",
+      "antivirusMac1": "Antywirus dla komputerów Mac (1 stanowisko)",
+      "antivirusMac3": "Antywirus dla komputerów Mac (3 stanowiska)"
+    },
+    "canalPlus": {
+      "canalSport": "Canal+ Super Sport",
+      "canalMovies": "Canal+ Seriale i Filmy"
+    }
+  }
+}
