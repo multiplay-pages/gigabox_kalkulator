@@ -458,6 +458,8 @@ img {
 
 .slider-scale {
   position: relative;
+  display: flex;
+  justify-content: space-between;
   width: calc(100% - var(--slider-thumb-size));
   height: 16px;
   margin: 4px var(--slider-side-offset) 0;
@@ -470,6 +472,7 @@ img {
   top: 0;
   left: calc(var(--tick) * 20%);
   transform: translateX(-50%);
+  display: block;
   line-height: 1;
   text-align: center;
 }
