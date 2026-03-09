@@ -156,6 +156,7 @@ img {
   grid-template-columns: minmax(0, 1fr) 340px;
   gap: 24px;
   margin-top: 24px;
+  align-items: start;
 }
 
 .progress-nav {
@@ -636,12 +637,15 @@ img {
 }
 
 .summary-column {
+  position: sticky;
+  top: 24px;
   align-self: start;
+  height: fit-content;
 }
 
 .sidebar-card {
-  position: sticky;
-  top: 24px;
+  position: static;
+  top: auto;
   padding: 18px;
 }
 
