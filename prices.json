@@ -94,7 +94,6 @@
       "price": 10,
       "existingDiscount": 5
     },
-    "tvMulti": 109.97,
     "tvAddons": {
       "pvrM": 10,
       "pvrL": 15,
@@ -102,12 +101,12 @@
     },
     "multiroom": {
       "monthly": 15,
-      "activation": 99,
-      "technicianAssistance": 100
+      "activation": 99
     },
     "wifiPremium": {
       "monthly": 10,
-      "activation": 89
+      "activation": 89,
+      "technicianVisit": 100
     },
     "internetPlus": 10,
     "bitdefender": {
@@ -127,40 +126,70 @@
     "promoRules": {
       "minimumServiceMonths": 3
     },
+    "promotionsCommon": {
+      "oneZlotyPrice": 1
+    },
     "promotions": {
       "none": {
         "label": "Brak promocji",
-        "monthlyForOneActive": false,
-        "monthsForOne": 0,
-        "promoMonthlyPrice": 0
+        "mode": "none",
+        "allowedStatuses": ["new", "existing"]
       },
-      "start": {
-        "label": "Na start",
-        "monthlyForOneActive": true,
-        "monthsForOne": 3,
-        "promoMonthlyPrice": 1
+      "sixForOne": {
+        "label": "6 za 1",
+        "mode": "fixedMonths",
+        "monthsForOne": 6,
+        "allowedStatuses": ["new"]
       },
-      "ztr": {
-        "label": "ZTR",
-        "monthlyForOneActive": true,
-        "monthsForOne": 3,
-        "promoMonthlyPrice": 1
+      "ztr2026": {
+        "label": "ZTR 2026",
+        "mode": "externalRemaining",
+        "maxMonths": 12,
+        "defaultRemainingMonths": 3,
+        "allowedStatuses": ["new"]
       },
-      "wroc": {
-        "label": "Wróć do Multiplay",
-        "monthlyForOneActive": true,
-        "monthsForOne": 3,
-        "promoMonthlyPrice": 1
+      "comeback": {
+        "label": "Powrót do Multiplay",
+        "mode": "externalRemainingPlusBonus",
+        "bonusMonths": 3,
+        "maxMonths": 24,
+        "defaultRemainingMonths": 6,
+        "allowedStatuses": ["new"]
       },
-      "banerowa": {
-        "label": "Banerowa",
-        "monthlyForOneActive": true,
-        "monthsForOne": 3,
-        "promoMonthlyPrice": 1
+      "chooseGift": {
+        "label": "Wybierz swój prezent",
+        "mode": "gift",
+        "allowedStatuses": ["existing"]
       }
     },
-    "promo": {
-      "reducedAddonPrice": 1
+    "bannerPromo": {
+      "label": "Promocja Banerowa",
+      "promoMonthlyPrice": 1
+    },
+    "gifts": {
+      "subscriptionDiscount": {
+        "label": "Rabat abonamentowy",
+        "type": "subscriptionDiscount",
+        "amountMonthly": 10,
+        "durationMonths": 12
+      },
+      "wifiDiscount": {
+        "label": "Rabat na usługę WiFi Premium",
+        "type": "wifiSingleUnitDiscount",
+        "discountedUnitPrice": 1,
+        "durationMonths": 12,
+        "units": 1
+      },
+      "multiroomDiscount": {
+        "label": "Rabat na usługę Multiroom (niedostępny w tym kalkulatorze)",
+        "type": "unavailable",
+        "disabled": true
+      },
+      "routerReplacement": {
+        "label": "Wymiana routera",
+        "type": "descriptive",
+        "description": "Benefit pozacenowy — wymiana routera nie zmienia ceny w kalkulatorze."
+      }
     },
     "labels": {
       "tvAddons": {

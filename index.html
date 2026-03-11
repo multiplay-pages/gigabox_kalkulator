@@ -11,9 +11,14 @@
 </head>
 <body>
   <header class="hero">
-    <img class="hero-logo" src="./logo_multiplay_new.svg" alt="Multiplay" />
-    <h1>Kalkulator Oferty GigaBOX</h1>
-    <p>Oferta 03.2026 GigaBox_3.1_MESH_10ZL • jedna przewijana strona</p>
+    <div class="hero-inner">
+      <img class="hero-logo" src="./logo_multiplay_new.svg" alt="Multiplay" />
+      <div>
+        <p class="eyebrow">GigaBOX 03.2026 • jedna przewijana strona</p>
+        <h1>Kalkulator oferty GigaBOX</h1>
+        <p class="hero-copy">Układ i panel boczny w stylu GigaNET, ale z logiką dopasowaną do GigaBOX i promocji 2026.</p>
+      </div>
+    </div>
   </header>
 
   <main class="layout">
@@ -32,109 +37,146 @@
 
       <section id="parametry" class="section-card">
         <h2><span>1</span>Parametry oferty</h2>
-        <p class="section-lead">Tu ustawiasz bazę oferty: zobowiązanie, typ klienta i taryfę internetu.</p>
+        <p class="section-lead">Tu ustawiasz bazę oferty: okres umowy, rodzaj budynku, status klienta i taryfę internetu.</p>
+
         <div class="grid two">
-          <label class="option-card" title="Wybierz długość zobowiązania"><input type="radio" name="contractPeriod" value="12" />12 miesięcy</label>
-          <label class="option-card" title="Wybierz długość zobowiązania"><input type="radio" name="contractPeriod" value="24" checked />24 miesiące</label>
-          <label class="option-card"><input type="radio" name="buildingType" value="SFH" checked />Domek (SFH)</label>
-          <label class="option-card"><input type="radio" name="buildingType" value="MFH" />Blok (MFH)</label>
-          <label class="option-card"><input type="radio" name="customerStatus" value="new" checked />Nowy klient</label>
-          <label class="option-card"><input type="radio" name="customerStatus" value="existing" />Obecny klient</label>
+          <label class="option-card"><input type="radio" name="contractPeriod" value="12" /><div class="card-copy"><strong>12 miesięcy</strong><small>krótsze zobowiązanie</small></div></label>
+          <label class="option-card"><input type="radio" name="contractPeriod" value="24" checked /><div class="card-copy"><strong>24 miesiące</strong><small>lepsza cena i większy potencjał promocji</small></div></label>
+          <label class="option-card"><input type="radio" name="buildingType" value="SFH" checked /><div class="card-copy"><strong>Domek (SFH)</strong><small>zabudowa jednorodzinna</small></div></label>
+          <label class="option-card"><input type="radio" name="buildingType" value="MFH" /><div class="card-copy"><strong>Blok (MFH)</strong><small>zabudowa wielorodzinna</small></div></label>
+          <label class="option-card"><input type="radio" name="customerStatus" value="new" checked /><div class="card-copy"><strong>Nowy klient</strong><small>umowa od zera</small></div></label>
+          <label class="option-card"><input type="radio" name="customerStatus" value="existing" /><div class="card-copy"><strong>Obecny klient</strong><small>utrzymanie / zmiana / przedłużenie</small></div></label>
         </div>
 
-        <label class="switch-row" title="Taryfy 100/10, 350/35, 500/100 dostępne wyłącznie przy ograniczeniach technicznych">
+        <label class="switch-row helper-gap" title="Taryfy 100/10, 350/35 i 500/100 są dostępne wyłącznie przy ograniczeniach technicznych.">
           <input id="technicalLimit" type="checkbox" />
           <span>Ograniczenia techniczne (odblokuj taryfy &lt; 600 Mb/s)</span>
         </label>
 
         <div class="grid two">
-          <label class="option-card" data-speed="100/10"><input type="radio" name="internetSpeed" value="100/10" />100/10 Mb/s <small>tylko przy ograniczeniach technicznych</small></label>
-          <label class="option-card" data-speed="350/35"><input type="radio" name="internetSpeed" value="350/35" />350/35 Mb/s <small>tylko przy ograniczeniach technicznych</small></label>
-          <label class="option-card" data-speed="500/100"><input type="radio" name="internetSpeed" value="500/100" />500/100 Mb/s <small>tylko przy ograniczeniach technicznych</small></label>
-          <label class="option-card" data-speed="600/100"><input type="radio" name="internetSpeed" value="600/100" checked />600/100 Mb/s <small id="price-600-100"></small></label>
-          <label class="option-card" data-speed="800/200"><input type="radio" name="internetSpeed" value="800/200" />800/200 Mb/s <small id="price-800-200"></small></label>
-          <label class="option-card" data-speed="1000/300"><input type="radio" name="internetSpeed" value="1000/300" />1000/300 Mb/s <small id="price-1000-300"></small></label>
-          <label class="option-card" data-speed="2000/2000"><input type="radio" name="internetSpeed" value="2000/2000" />2000/2000 Mb/s <small id="price-2000-2000"></small></label>
+          <label class="option-card" data-speed="100/10"><input type="radio" name="internetSpeed" value="100/10" /><div class="card-copy"><strong>100/10 Mb/s</strong><small>tylko przy ograniczeniach technicznych</small></div></label>
+          <label class="option-card" data-speed="350/35"><input type="radio" name="internetSpeed" value="350/35" /><div class="card-copy"><strong>350/35 Mb/s</strong><small>tylko przy ograniczeniach technicznych</small></div></label>
+          <label class="option-card" data-speed="500/100"><input type="radio" name="internetSpeed" value="500/100" /><div class="card-copy"><strong>500/100 Mb/s</strong><small>tylko przy ograniczeniach technicznych</small></div></label>
+          <label class="option-card" data-speed="600/100"><input type="radio" name="internetSpeed" value="600/100" checked /><div class="card-copy"><strong>600/100 Mb/s</strong><small id="price-600-100"></small></div></label>
+          <label class="option-card" data-speed="800/200"><input type="radio" name="internetSpeed" value="800/200" /><div class="card-copy"><strong>800/200 Mb/s</strong><small id="price-800-200"></small></div></label>
+          <label class="option-card" data-speed="1000/300"><input type="radio" name="internetSpeed" value="1000/300" /><div class="card-copy"><strong>1000/300 Mb/s</strong><small id="price-1000-300"></small></div></label>
+          <label class="option-card" data-speed="2000/2000"><input type="radio" name="internetSpeed" value="2000/2000" /><div class="card-copy"><strong>2000/2000 Mb/s</strong><small id="price-2000-2000"></small></div></label>
         </div>
       </section>
 
       <section id="zgody" class="section-card">
         <h2><span>2</span>Zgody</h2>
-        <p class="section-lead">Rabaty zgód są już w cenie bazowej — brak zgód podnosi abonament.</p>
-        <label class="switch-row" title="Cena bazowa zawiera rabat e-faktury"><input id="eInvoice" type="checkbox" checked />E-faktura (rabat 10 zł/mies.)</label>
-        <label class="switch-row" title="Cena bazowa zawiera rabat zgody marketingowej"><input id="marketing" type="checkbox" checked />Zgoda marketingowa (rabat 5 zł/mies.)</label>
-        <p class="hint">Ceny bazowe internetu zawierają oba rabaty. Brak e-faktury = +10 zł, brak zgody marketingowej = +5 zł.</p>
+        <p class="section-lead">Cena bazowa zawiera rabat za e-fakturę i zgodę marketingową. Wyłączenie zgód podnosi abonament.</p>
+        <div class="grid two">
+          <label class="option-card"><input id="eInvoice" type="checkbox" checked /><div class="card-copy"><strong>E-faktura</strong><small>rabat 10 zł / mies.</small></div></label>
+          <label class="option-card"><input id="marketing" type="checkbox" checked /><div class="card-copy"><strong>Zgoda marketingowa</strong><small>rabat 5 zł / mies.</small></div></label>
+        </div>
+        <p class="hint">Brak e-faktury = +10 zł / mies. Brak zgody marketingowej = +5 zł / mies.</p>
       </section>
 
       <section id="telewizja" class="section-card">
         <h2><span>3</span>Telewizja</h2>
-        <p class="section-lead">TV Multi to podstawa oferty, tutaj dobierasz multiroom i dodatki TV.</p>
-        <p class="mandatory">TV Multi (obowiązkowe): 109,97 zł/mies.</p>
+        <p class="section-lead">TV Multi jest już uwzględnione w cenie bazowej GigaBOX. Tutaj dobierasz tylko dodatki TV i Multiroom.</p>
+        <p class="mandatory">TV Multi jest obowiązkowym elementem pakietu i jest już zawarte w cenie bazowej.</p>
 
-        <div class="slider-row" title="15 zł/mies. i 99 zł aktywacji za każdą sztukę">
-          <label for="multiroomCount">Multiroom: <strong id="multiroomCountDisplay">0 szt.</strong></label>
-          <input id="multiroomCount" type="range" min="0" max="5" value="0" />
+        <div class="slider-card">
+          <div class="slider-head">
+            <h3>Multiroom</h3>
+            <span id="multiroomCountDisplay" class="pill">0 szt.</span>
+          </div>
+          <label for="multiroomCount" class="slider-label">Ilość dekoderów dodatkowych</label>
+          <input id="multiroomCount" class="range-input" type="range" min="0" max="5" value="0" />
+          <p class="hint">15 zł / mies. oraz 99 zł aktywacji za każdą sztukę.</p>
         </div>
-        <label class="switch-row" title="Jednorazowa dopłata 100 zł, niezależnie od liczby urządzeń"><input id="multiroomAssistance" type="checkbox" />Asysta technika (+100 zł jednorazowo)</label>
 
+        <h3 class="subheading">Dodatki TV</h3>
         <div class="grid three">
-          <label class="option-card"><input type="checkbox" name="tvAddons" value="pvrM" />PVR M (10 zł)</label>
-          <label class="option-card"><input type="checkbox" name="tvAddons" value="pvrL" />PVR L (15 zł)</label>
-          <label class="option-card"><input type="checkbox" name="tvAddons" value="tvMax" />TV Max (40 zł)</label>
+          <label class="option-card"><input type="checkbox" name="tvAddons" value="pvrM" /><div class="card-copy"><strong>PVR M</strong><small>+10 zł / mies.</small></div></label>
+          <label class="option-card"><input type="checkbox" name="tvAddons" value="pvrL" /><div class="card-copy"><strong>PVR L</strong><small>+15 zł / mies.</small></div></label>
+          <label class="option-card"><input type="checkbox" name="tvAddons" value="tvMax" /><div class="card-copy"><strong>TV Max</strong><small>+40 zł / mies.</small></div></label>
         </div>
       </section>
 
       <section id="internet" class="section-card">
         <h2><span>4</span>Internet i bezpieczeństwo</h2>
         <p class="section-lead">Dodatki internetowe, bezpieczeństwo i pakiety Canal+.</p>
-        <label class="switch-row" title="Standardowo +10 zł/mies., dla obecnego klienta +5 zł/mies.; przy 2000/2000 w cenie"><input id="symmetricConnection" type="checkbox" />Łącze symetryczne <small id="symmetricHint"></small></label>
 
-        <div class="slider-row" title="10 zł/mies./szt. i 89 zł aktywacji/szt.">
-          <label for="wifiCount">WiFi Premium (MESH): <strong id="wifiCountDisplay">0 szt.</strong></label>
-          <input id="wifiCount" type="range" min="0" max="5" value="0" />
+        <div class="grid two">
+          <label class="option-card"><input id="symmetricConnection" type="checkbox" /><div class="card-copy"><strong>Łącze symetryczne</strong><small id="symmetricHint"></small></div></label>
+          <label class="option-card"><input id="internetPlus" type="checkbox" /><div class="card-copy"><strong>Internet+</strong><small>+10 zł / mies.</small></div></label>
         </div>
 
-        <label class="switch-row"><input id="internetPlus" type="checkbox" />Internet+ (10 zł/mies.)</label>
+        <div class="slider-card space-top">
+          <div class="slider-head">
+            <h3>WiFi Premium (MESH)</h3>
+            <span id="wifiCountDisplay" class="pill">0 szt.</span>
+          </div>
+          <label for="wifiCount" class="slider-label">Ilość urządzeń</label>
+          <input id="wifiCount" class="range-input" type="range" min="0" max="5" value="0" />
+          <p class="hint">10 zł / mies. oraz 89 zł aktywacji za każdą sztukę.</p>
 
-        <h3>Canal+ (osobne zobowiązanie 12 mies.)</h3>
-        <div class="grid two">
-          <label class="option-card"><input type="checkbox" name="canalPlus" value="serialeFilmy" />Canal+ Seriale i Filmy (24,99 zł)</label>
-          <label class="option-card"><input type="checkbox" name="canalPlus" value="superSport" />Canal+ Super Sport (64,99 zł)</label>
+          <div id="wifiInstallWrap" class="install-variant hidden">
+            <h4>Wariant instalacji</h4>
+            <div class="stacked-options">
+              <label class="stack-card"><input id="wifiInstallSelf" type="radio" name="wifiInstallType" value="self" checked /><span>Self Install</span></label>
+              <label class="stack-card"><input id="wifiInstallTechnician" type="radio" name="wifiInstallType" value="technician" /><span>Wyjazd technika (+100 zł jednorazowo)</span></label>
+            </div>
+          </div>
         </div>
 
-        <h3>Bitdefender (wybór jednego wariantu)</h3>
+        <h3 class="subheading">Canal+ (osobne zobowiązanie 12 mies.)</h3>
         <div class="grid two">
-          <label class="option-card"><input type="radio" name="bitdefender" value="none" checked />Brak pakietu</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="internetSecurity1" />Internet Security 1 (9 zł)</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="internetSecurity3" />Internet Security 3 (14,99 zł)</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="mobileSecurity" />Mobile Security (6 zł)</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="familyPack" />Family Pack (20 zł)</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="antivirusMac1" />Antivirus for Mac 1 (9 zł)</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="antivirusMac3" />Antivirus for Mac 3 (14,99 zł)</label>
+          <label class="option-card"><input type="checkbox" name="canalPlus" value="serialeFilmy" /><div class="card-copy"><strong>Canal+ Seriale i Filmy</strong><small>24,99 zł / mies.</small></div></label>
+          <label class="option-card"><input type="checkbox" name="canalPlus" value="superSport" /><div class="card-copy"><strong>Canal+ Super Sport</strong><small>64,99 zł / mies.</small></div></label>
+        </div>
+
+        <h3 class="subheading">Bitdefender (wybór jednego wariantu)</h3>
+        <div class="grid two">
+          <label class="option-card"><input type="radio" name="bitdefender" value="none" checked /><div class="card-copy"><strong>Brak pakietu</strong><small>0 zł</small></div></label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="internetSecurity1" /><div class="card-copy"><strong>Internet Security 1</strong><small>9 zł</small></div></label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="internetSecurity3" /><div class="card-copy"><strong>Internet Security 3</strong><small>14,99 zł</small></div></label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="mobileSecurity" /><div class="card-copy"><strong>Mobile Security</strong><small>6 zł</small></div></label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="familyPack" /><div class="card-copy"><strong>Family Pack</strong><small>20 zł</small></div></label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="antivirusMac1" /><div class="card-copy"><strong>Antivirus for Mac 1</strong><small>9 zł</small></div></label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="antivirusMac3" /><div class="card-copy"><strong>Antivirus for Mac 3</strong><small>14,99 zł</small></div></label>
         </div>
       </section>
 
       <section id="telefon" class="section-card">
         <h2><span>5</span>Telefon stacjonarny</h2>
-        <p class="section-lead">Opcjonalna usługa telefoniczna bez opłaty aktywacyjnej.</p>
-        <label class="switch-row"><input id="phoneService" type="checkbox" />Telefon bez limitu Max (9,99 zł/mies.)</label>
+        <p class="section-lead">Opcjonalna usługa telefoniczna bez dodatkowej aktywacji.</p>
+        <div class="grid one">
+          <label class="option-card"><input id="phoneService" type="checkbox" /><div class="card-copy"><strong>Telefon bez limitu Max</strong><small>9,99 zł / mies.</small></div></label>
+        </div>
         <p class="hint">Opis oferty telefonu: <a href="https://multiplay.pl/telefon" target="_blank" rel="noopener noreferrer">multiplay.pl/telefon</a></p>
       </section>
 
-      <section id="promocje" class="section-card">
-        <h2><span>6</span>Promocje i benefity</h2>
-        <p class="section-lead">Wybierz promocję główną i benefity dla obecnych klientów.</p>
-        <label for="mainPromotion">Promocja główna (miesiące za 1 zł)</label>
-        <select id="mainPromotion">
-          <option value="none">Brak</option>
-          <option value="start">Na start</option>
-          <option value="ztr">ZTR</option>
-          <option value="wroc">Wróć do Multiplay</option>
-          <option value="banerowa">Banerowa</option>
-        </select>
+      <section id="promocje" class="section-card promo-card">
+        <div class="promo-head">
+          <span class="promo-step">6</span>
+          <div>
+            <h2>Promocje i benefity</h2>
+            <p class="section-lead">Wybierz promocję zgodnie z regulaminem i statusem klienta.</p>
+          </div>
+        </div>
 
-        <label class="switch-row" title="Dla obecnych klientów: Multiroom i WiFi Premium po 1 zł/mies./szt."><input id="promoAddonTo1" type="checkbox" />Obniżenie abonamentu za Multiroom/WiFi Premium do 1 zł</label>
-        <label class="switch-row" title="Dla obecnych klientów: pierwszy Multiroom gratis (miesięcznie i aktywacja)"><input id="promoMultiroomGift" type="checkbox" />Multiroom w prezencie</label>
+        <label class="field-label" for="mainPromotion">Promocja główna</label>
+        <select id="mainPromotion"></select>
+
+        <div id="externalMonthsWrap" class="conditional-block hidden">
+          <label class="field-label" for="externalMonthsInput" id="externalMonthsLabel">Miesiące pozostałe u obecnego operatora</label>
+          <input id="externalMonthsInput" type="number" min="1" max="12" step="1" />
+          <p id="externalMonthsHint" class="hint"></p>
+        </div>
+
+        <div id="giftWrap" class="conditional-block hidden">
+          <label class="field-label" for="promotionGiftType">Wybierz jeden prezent</label>
+          <select id="promotionGiftType"></select>
+          <p id="giftHint" class="hint"></p>
+        </div>
+
+        <label class="switch-row helper-gap"><input id="bannerPromoEnabled" type="checkbox" />Połącz z „Promocją Banerową” (1 mies. za 1 zł)</label>
+        <p class="hint">Promocja Banerowa dodaje 1 dodatkowy miesiąc abonamentowy za 1 zł po zakończeniu głównej promocji abonamentowej.</p>
       </section>
 
       <section id="podsumowanie" class="section-card">
@@ -144,13 +186,13 @@
           <div>
             <h3>Koszty miesięczne</h3>
             <div id="summaryMonthly" class="list"></div>
-            <h3>Koszty jednorazowe</h3>
+            <h3 class="subheading">Koszty jednorazowe</h3>
             <div id="summaryOneTime" class="list"></div>
           </div>
           <div>
             <h3>Szczegóły umowy</h3>
             <div id="summaryDetails" class="list"></div>
-            <h3>Aktywna promocja i benefity</h3>
+            <h3 class="subheading">Aktywna promocja i benefity</h3>
             <div id="summaryBenefits" class="list"></div>
           </div>
         </div>
@@ -159,17 +201,45 @@
       </section>
     </section>
 
-    <aside class="sidebar sticky" id="sidebar">
+    <aside class="sidebar sticky">
+      <p class="sidebar-eyebrow">Podsumowanie oferty</p>
       <h3>Cena końcowa</h3>
-      <div class="totals">
-        <div><span>Miesięcznie</span><strong id="totalMonthly">0,00 zł</strong></div>
-        <div><span>Start</span><strong id="totalOneTime">0,00 zł</strong></div>
-        <div><span>Uśredniona wartość abonamentu</span><strong id="avgMonthly">0,00 zł</strong></div>
-        <div><span>Abonament w okresach promocji</span><strong id="promoSchedule">Brak promocji abonamentowej</strong></div>
-        <div><span>Łączna oszczędność z promocji</span><strong id="promoSavings">0,00 zł</strong></div>
+
+      <div class="totals-grid">
+        <div class="total-box">
+          <span>Miesięcznie</span>
+          <strong id="totalMonthly">0,00 zł</strong>
+        </div>
+        <div class="total-box">
+          <span>Start</span>
+          <strong id="totalOneTime">0,00 zł</strong>
+        </div>
       </div>
-      <h4>Szczegóły kosztów</h4>
-      <div id="sidebarMonthly" class="list compact"></div>
+
+      <div id="sidebarMeta" class="list compact"></div>
+      <div id="sidebarCosts" class="list compact divider-top"></div>
+
+      <section class="sidebar-card divider-top">
+        <h4>Aktywna promocja i benefity</h4>
+        <div id="sidebarBenefits" class="benefit-list"></div>
+      </section>
+
+      <section class="sidebar-card highlight-card divider-top">
+        <h4>Uśredniona wartość abonamentu</h4>
+        <div id="avgMonthly" class="highlight-value">0,00 zł / mies.</div>
+      </section>
+
+      <section class="sidebar-card divider-top">
+        <h4>Abonament w okresach promocji</h4>
+        <div id="promoSchedule" class="list compact"></div>
+      </section>
+
+      <div class="saving-line divider-top">
+        <span>Łączna oszczędność z promocji</span>
+        <strong id="promoSavings">0,00 zł</strong>
+      </div>
+
+      <p id="sidebarNotes" class="sidebar-notes"></p>
     </aside>
   </main>
 
