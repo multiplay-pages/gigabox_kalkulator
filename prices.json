@@ -1,78 +1,130 @@
 {
   "prices": {
-    "internetBase": {
-      "600/100": 5.01,
-      "800/200": 10.01,
-      "1000/300": 15.01,
-      "2000/2000": 70.01
-    },
-    "equipmentRent": {
-      "SFH": {
-        "12": 5.02,
-        "24": 0.02
+    "basePackage": {
+      "12": {
+        "SFH": {
+          "new": {
+            "100/10": 129.99,
+            "350/35": 132.99,
+            "500/100": 134.99,
+            "600/100": 140.00,
+            "800/200": 145.00,
+            "1000/300": 150.00,
+            "2000/2000": 205.00
+          },
+          "existing": {
+            "100/10": 129.99,
+            "350/35": 132.99,
+            "500/100": 134.99,
+            "600/100": 140.00,
+            "800/200": 145.00,
+            "1000/300": 150.00,
+            "2000/2000": 205.00
+          }
+        },
+        "MFH": {
+          "new": {
+            "100/10": 109.99,
+            "350/35": 112.99,
+            "500/100": 114.99,
+            "600/100": 120.00,
+            "800/200": 125.00,
+            "1000/300": 130.00,
+            "2000/2000": 185.00
+          },
+          "existing": {
+            "100/10": 109.99,
+            "350/35": 112.99,
+            "500/100": 114.99,
+            "600/100": 120.00,
+            "800/200": 125.00,
+            "1000/300": 130.00,
+            "2000/2000": 185.00
+          }
+        }
       },
-      "MFH": {
-        "12": 5.01,
-        "24": 0.01
+      "24": {
+        "SFH": {
+          "new": {
+            "100/10": 124.99,
+            "350/35": 127.99,
+            "500/100": 129.99,
+            "600/100": 135.00,
+            "800/200": 140.00,
+            "1000/300": 145.00,
+            "2000/2000": 200.00
+          },
+          "existing": {
+            "100/10": 124.99,
+            "350/35": 127.99,
+            "500/100": 129.99,
+            "600/100": 135.00,
+            "800/200": 140.00,
+            "1000/300": 145.00,
+            "2000/2000": 200.00
+          }
+        },
+        "MFH": {
+          "new": {
+            "100/10": 104.99,
+            "350/35": 107.99,
+            "500/100": 109.99,
+            "600/100": 115.00,
+            "800/200": 120.00,
+            "1000/300": 125.00,
+            "2000/2000": 180.00
+          },
+          "existing": {
+            "100/10": 104.99,
+            "350/35": 107.99,
+            "500/100": 109.99,
+            "600/100": 115.00,
+            "800/200": 120.00,
+            "1000/300": 125.00,
+            "2000/2000": 180.00
+          }
+        }
       }
     },
-    "lineMaintenance": {
-      "SFH": 20.0,
-      "MFH": 0.01
+    "consents": {
+      "eInvoicePenalty": 10,
+      "marketingPenalty": 5
+    },
+    "symmetricConnection": {
+      "price": 10,
+      "existingDiscount": 5
     },
     "tvMulti": 109.97,
-    "installation": {
-      "new": 249.0,
-      "existing": 0.0
+    "multiroom": {
+      "monthly": 15,
+      "activation": 99,
+      "technicianAssistance": 100
     },
-    "symmetricConnection": 10.0,
-    "multiroomMonthly": 15.0,
-    "multiroomActivation": 99.0,
-    "multiroomAssistance": 100.0,
-    "wifiMonthly": 20.0,
-    "wifiActivation": 89.0,
-    "phoneService": 9.99,
-    "tvAddons": {
-      "pvrM": 10.0,
-      "pvrL": 15.0,
-      "tvMax": 40.0
+    "wifiPremium": {
+      "monthly": 10,
+      "activation": 89
     },
-    "internetAddons": {
-      "internetPlus": 10.0
-    },
+    "internetPlus": 10,
     "bitdefender": {
-      "internetSecurity1": 9.0,
+      "internetSecurity1": 9,
       "internetSecurity3": 14.99,
-      "mobileSecurity": 6.0,
-      "familyPack": 20.0,
-      "antivirusMac1": 9.0,
+      "mobile": 6,
+      "familyPack": 20,
+      "antivirusMac1": 9,
       "antivirusMac3": 14.99
     },
     "canalPlus": {
-      "canalSport": 64.99,
-      "canalMovies": 24.99
-    }
-  },
-  "labels": {
-    "tvAddons": {
-      "pvrM": "PVR M",
-      "pvrL": "PVR L",
-      "tvMax": "TV Max"
+      "superSport": 64.99,
+      "serialeFilmy": 24.99,
+      "entry": 19.99
     },
-    "internetAddons": {
-      "internetPlus": "Internet+"
-    },
-    "bitdefender": {
-      "internetSecurity1": "Internet Security (1 stanowisko)",
-      "internetSecurity3": "Bezpieczeństwo w Internecie (3 stanowiska)",
-      "mobileSecurity": "Bezpieczeństwo mobilne",
-      "familyPack": "Pakiet rodzinny",
-      "antivirusMac1": "Antywirus dla komputerów Mac (1 stanowisko)",
-      "antivirusMac3": "Antywirus dla komputerów Mac (3 stanowiska)"
-    },
-    "canalPlus": {
-      "canalSport": "Canal+ Super Sport",
-      "canalMovies": "Canal+ Seriale i Filmy"
+    "phoneService": 9.99,
+    "installation": 249,
+    "promo": {
+      "monthsFor1zl": 3,
+      "promoMonthlyPrice": 1,
+      "reducedAddonPrice": 1,
+      "minimumServiceMonths": 3
     }
   }
 }
