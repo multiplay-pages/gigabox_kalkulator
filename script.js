@@ -1,30 +1,64 @@
-const STORAGE_KEY = 'gigabox_calculator_state_v4';
+const STORAGE_KEY = 'gigabox_calculator_state_v5';
 
-let prices = null;
-let config = { ...CalculatorCore.DEFAULT_CONFIG };
+const state = {
+  prices: null,
+  config: null,
+  model: null,
+};
+
 const el = {};
 
-function getSelectedValues(selector) {
-  return [...document.querySelectorAll(`${selector}:checked`)].map((input) => input.value);
+function requiredElement(id) {
+  const node = document.getElementById(id);
+  if (!node) throw new Error(`Brak wymaganego elementu DOM: #${id}`);
+  return node;
 }
 
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+function collectDom() {
+  [
+    'loadStatus', 'mainPromotion', 'multiroomCount', 'wifiCount', 'symmetricConnection', 'symmetricHint',
+    'summaryMonthly', 'summaryOneTime', 'summaryDetails', 'summaryBenefits', 'sidebarMonthly',
+    'totalMonthly', 'totalOneTime', 'avgMonthly', 'promoSchedule', 'promoSavings',
+    'multiroomCountDisplay', 'wifiCountDisplay', 'copySummaryBtn', 'copyStatus',
+  ].forEach((id) => { el[id] = requiredElement(id); });
+}
+
+function showLoadError(message) {
+  if (!el.loadStatus) return;
+  el.loadStatus.textContent = message;
+  el.loadStatus.classList.remove('hidden');
+}
+
+function hideLoadError() {
+  el.loadStatus?.classList.add('hidden');
+}
+
+function safeParseState(raw) {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
 }
 
 function restoreState() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    config = CalculatorCore.normalizeConfig(raw);
-  } catch {
-    config = { ...CalculatorCore.DEFAULT_CONFIG };
-  }
+  const parsed = safeParseState(localStorage.getItem(STORAGE_KEY) || '{}');
+  state.config = CalculatorCore.normalizeConfig(parsed || {});
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.config));
+}
 
 async function loadPrices() {
   const response = await fetch('./prices.json', { cache: 'no-store' });
   if (!response.ok) throw new Error(`Nie udało się wczytać prices.json (HTTP ${response.status}).`);
   const payload = await response.json();
-  prices = CalculatorCore.toCentsTree(payload.prices);
+  state.prices = CalculatorCore.toCentsTree(payload.prices);
+}
+
+function getCheckedValues(selector) {
+  return [...document.querySelectorAll(`${selector}:checked`)].map((node) => node.value);
 }
 
 function renderRows(target, rows, emptyLabel = 'Brak') {
@@ -39,109 +73,108 @@ function renderTextRows(target, rows, emptyLabel = 'Brak') {
     : `<div class="row"><span>${emptyLabel}</span><strong>—</strong></div>`;
 }
 
-function syncConfigToInputs() {
-  const safe = CalculatorCore.enforceRules(config);
-  config = safe;
+function syncInputsWithConfig() {
+  const config = state.config;
+  document.querySelector(`input[name="contractPeriod"][value="${config.contractPeriod}"]`)?.setAttribute('checked', 'checked');
+  document.querySelector(`input[name="buildingType"][value="${config.buildingType}"]`)?.setAttribute('checked', 'checked');
+  document.querySelector(`input[name="customerStatus"][value="${config.customerStatus}"]`)?.setAttribute('checked', 'checked');
+  document.querySelector(`input[name="bitdefender"][value="${config.bitdefender}"]`)?.setAttribute('checked', 'checked');
 
-  document.querySelector(`input[name="contractPeriod"][value="${config.contractPeriod}"]`).checked = true;
-  document.querySelector(`input[name="buildingType"][value="${config.buildingType}"]`).checked = true;
-  document.querySelector(`input[name="customerStatus"][value="${config.customerStatus}"]`).checked = true;
-  document.querySelector(`input[name="bitdefender"][value="${config.bitdefender}"]`).checked = true;
+  ['contractPeriod', 'buildingType', 'customerStatus', 'bitdefender'].forEach((name) => {
+    document.querySelectorAll(`input[name="${name}"]`).forEach((input) => { input.checked = state.config[name] === input.value; });
+  });
 
   ['technicalLimit', 'eInvoice', 'marketing', 'symmetricConnection', 'multiroomAssistance', 'internetPlus', 'phoneService', 'promoAddonTo1', 'promoMultiroomGift']
-    .forEach((id) => { document.getElementById(id).checked = !!config[id]; });
+    .forEach((id) => {
+      const node = document.getElementById(id);
+      if (node) node.checked = !!state.config[id];
+    });
 
-  document.querySelectorAll('input[name="tvAddons"]').forEach((input) => { input.checked = config.tvAddons.includes(input.value); });
-  document.querySelectorAll('input[name="canalPlus"]').forEach((input) => { input.checked = config.canalPlus.includes(input.value); });
-
-  el.mainPromotion.value = config.mainPromotion;
-  el.multiroomCount.value = String(config.multiroomCount);
-  el.wifiCount.value = String(config.wifiCount);
-
+  document.querySelectorAll('input[name="tvAddons"]').forEach((input) => { input.checked = state.config.tvAddons.includes(input.value); });
+  document.querySelectorAll('input[name="canalPlus"]').forEach((input) => { input.checked = state.config.canalPlus.includes(input.value); });
   document.querySelectorAll('input[name="internetSpeed"]').forEach((input) => {
-    const allowed = CalculatorCore.speedAllowed(config, input.value);
+    const allowed = CalculatorCore.speedAllowed(state.config, input.value);
     input.disabled = !allowed;
-    if (config.internetSpeed === input.value) input.checked = true;
-    const card = input.closest('.option-card');
-    if (card) card.classList.toggle('disabled', !allowed);
+    input.checked = state.config.internetSpeed === input.value;
+    input.closest('.option-card')?.classList.toggle('disabled', !allowed);
   });
+
+  el.mainPromotion.value = state.config.mainPromotion;
+  el.multiroomCount.value = String(state.config.multiroomCount);
+  el.wifiCount.value = String(state.config.wifiCount);
+
+  ['600/100', '800/200', '1000/300', '2000/2000'].forEach((speed) => {
+    const id = `price-${speed.replace('/', '-')}`;
+    const target = document.getElementById(id);
+    if (!target) return;
+    const value = state.prices.basePackage[state.config.contractPeriod][state.config.buildingType][state.config.customerStatus][speed];
+    target.textContent = `od ${CalculatorCore.money(value)}/mies.`;
+  });
+
+  const symmetricIncluded = state.config.internetSpeed === '2000/2000';
+  el.symmetricConnection.disabled = symmetricIncluded;
+  if (symmetricIncluded) {
+    el.symmetricConnection.checked = true;
+    el.symmetricHint.textContent = '(w cenie przy 2000/2000)';
+  } else if (state.config.customerStatus === 'existing') {
+    el.symmetricHint.textContent = '(+5 zł/mies. po rabacie)';
+  } else {
+    el.symmetricHint.textContent = '(+10 zł/mies.)';
+  }
 
   document.querySelectorAll('.option-card').forEach((card) => {
     const input = card.querySelector('input');
     card.classList.toggle('selected', !!input?.checked);
   });
-
-  ['600/100', '800/200', '1000/300', '2000/2000'].forEach((speed) => {
-    const key = speed.replace('/', '-');
-    const target = document.getElementById(`price-${key}`);
-    if (!target) return;
-    const value = prices.basePackage[config.contractPeriod][config.buildingType][config.customerStatus][speed];
-    target.textContent = `od ${CalculatorCore.money(value)}/mies.`;
-  });
-
-  if (config.internetSpeed === '2000/2000') {
-    el.symmetricConnection.checked = false;
-    el.symmetricConnection.disabled = true;
-    el.symmetricHint.textContent = '(w cenie przy 2000/2000)';
-  } else {
-    el.symmetricConnection.disabled = false;
-    el.symmetricHint.textContent = config.customerStatus === 'existing' ? '(+5 zł/mies. dla obecnego klienta)' : '(+10 zł/mies.)';
-  }
 }
 
 function render() {
-  const model = CalculatorCore.buildSummaryModel(config, prices);
-  config = model.config;
+  state.model = CalculatorCore.buildSummaryModel(state.config, state.prices);
+  state.config = state.model.config;
 
-  syncConfigToInputs();
+  syncInputsWithConfig();
 
-  renderRows(el.summaryMonthly, model.monthlyItems, 'Brak pozycji miesięcznych');
-  renderRows(el.summaryOneTime, model.oneTimeItems, 'Brak kosztów jednorazowych');
-  renderRows(el.sidebarMonthly, model.monthlyItems, 'Brak pozycji');
+  renderRows(el.summaryMonthly, state.model.monthlyItems, 'Brak pozycji miesięcznych');
+  renderRows(el.summaryOneTime, state.model.oneTimeItems, 'Brak kosztów jednorazowych');
+  renderRows(el.sidebarMonthly, state.model.monthlyItems, 'Brak pozycji');
 
-  const details = [
-    { label: 'Okres umowy', text: `${model.config.contractPeriod} miesięcy` },
-    { label: 'Typ budynku', text: model.config.buildingType === 'SFH' ? 'Domek (SFH)' : 'Blok (MFH)' },
-    { label: 'Status klienta', text: model.config.customerStatus === 'new' ? 'Nowy klient' : 'Obecny klient' },
-    { label: 'Taryfa internetu', text: model.config.internetSpeed },
-    { label: 'Minimalny okres świadczenia', text: `${prices.promoRules.minimumServiceMonths} pełne miesiące` },
+  const detailRows = [
+    { label: 'Okres umowy', text: `${state.config.contractPeriod} miesięcy` },
+    { label: 'Typ budynku', text: state.config.buildingType === 'SFH' ? 'Domek (SFH)' : 'Blok (MFH)' },
+    { label: 'Status klienta', text: state.config.customerStatus === 'new' ? 'Nowy klient' : 'Obecny klient' },
+    { label: 'Taryfa internetu', text: state.config.internetSpeed },
+    { label: 'Minimalny okres świadczenia', text: `${state.prices.promoRules.minimumServiceMonths} pełne miesiące` },
     { label: 'Zmiana taryfy na droższą', text: 'w dowolnym momencie' },
-    { label: 'Zmiana taryfy na tańszą', text: `po ${prices.promoRules.minimumServiceMonths} miesiącach` },
+    { label: 'Zmiana taryfy na tańszą', text: `po ${state.prices.promoRules.minimumServiceMonths} miesiącach` },
   ];
-  renderTextRows(el.summaryDetails, details, 'Brak');
+  renderTextRows(el.summaryDetails, detailRows);
+  renderTextRows(el.summaryBenefits, state.model.benefitsBreakdown, 'Brak aktywnych benefitów');
 
-  renderTextRows(el.summaryBenefits, model.benefitsBreakdown, 'Brak aktywnych benefitów');
-
-  el.totalMonthly.textContent = CalculatorCore.money(model.finalMonthlyPrice);
-  el.totalOneTime.textContent = CalculatorCore.money(model.finalOneTimePrice);
-  el.avgMonthly.textContent = CalculatorCore.money(model.avgMonthly);
-  el.promoSchedule.textContent = model.scheduleText;
-  el.promoSavings.textContent = CalculatorCore.money(model.savings.totalSavings);
-  el.multiroomCountDisplay.textContent = `${model.config.multiroomCount} szt.`;
-  el.wifiCountDisplay.textContent = `${model.config.wifiCount} szt.`;
-
-  el.copySummaryBtn.onclick = async () => {
-    try {
-      const text = CalculatorCore.buildCopySummaryText(model, prices);
-      await navigator.clipboard.writeText(text);
-      el.copyStatus.textContent = 'Podsumowanie skopiowane.';
-    } catch {
-      el.copyStatus.textContent = 'Nie udało się skopiować podsumowania.';
-    }
-    setTimeout(() => { el.copyStatus.textContent = ''; }, 2000);
-  };
+  el.totalMonthly.textContent = CalculatorCore.money(state.model.finalMonthlyPrice);
+  el.totalOneTime.textContent = CalculatorCore.money(state.model.finalOneTimePrice);
+  el.avgMonthly.textContent = CalculatorCore.money(state.model.avgMonthly);
+  el.promoSchedule.textContent = state.model.scheduleText;
+  el.promoSavings.textContent = CalculatorCore.money(state.model.savings.totalSavings);
+  el.multiroomCountDisplay.textContent = `${state.config.multiroomCount} szt.`;
+  el.wifiCountDisplay.textContent = `${state.config.wifiCount} szt.`;
 
   saveState();
 }
 
-function bindInputs() {
+async function copySummary() {
+  const text = CalculatorCore.buildCopySummaryText(state.model, state.prices);
+  await navigator.clipboard.writeText(text);
+  el.copyStatus.textContent = 'Podsumowanie skopiowane.';
+  setTimeout(() => { el.copyStatus.textContent = ''; }, 1800);
+}
+
+function bindEvents() {
   const bindRadio = (name, key) => {
     document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
       input.addEventListener('change', () => {
-        if (input.checked) {
-          config[key] = input.value;
-          render();
-        }
+        if (!input.checked) return;
+        state.config[key] = input.value;
+        render();
       });
     });
   };
@@ -152,78 +185,62 @@ function bindInputs() {
   bindRadio('internetSpeed', 'internetSpeed');
   bindRadio('bitdefender', 'bitdefender');
 
-  document.querySelectorAll('input[name="tvAddons"]').forEach((input) => {
-    input.addEventListener('change', () => {
-      config.tvAddons = getSelectedValues('input[name="tvAddons"]');
-      render();
-    });
-  });
-
-  document.querySelectorAll('input[name="canalPlus"]').forEach((input) => {
-    input.addEventListener('change', () => {
-      config.canalPlus = getSelectedValues('input[name="canalPlus"]');
-      render();
+  ['tvAddons', 'canalPlus'].forEach((name) => {
+    document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+      input.addEventListener('change', () => {
+        state.config[name] = getCheckedValues(`input[name="${name}"]`);
+        render();
+      });
     });
   });
 
   ['technicalLimit', 'eInvoice', 'marketing', 'symmetricConnection', 'multiroomAssistance', 'internetPlus', 'phoneService', 'promoAddonTo1', 'promoMultiroomGift']
     .forEach((id) => {
-      document.getElementById(id).addEventListener('change', (event) => {
-        config[id] = event.target.checked;
+      const node = document.getElementById(id);
+      node?.addEventListener('change', (event) => {
+        state.config[id] = event.target.checked;
         render();
       });
     });
 
   el.mainPromotion.addEventListener('change', (event) => {
-    config.mainPromotion = event.target.value;
+    state.config.mainPromotion = event.target.value;
     render();
   });
 
   el.multiroomCount.addEventListener('input', (event) => {
-    config.multiroomCount = Number(event.target.value);
+    state.config.multiroomCount = Number(event.target.value);
     render();
   });
 
   el.wifiCount.addEventListener('input', (event) => {
-    config.wifiCount = Number(event.target.value);
+    state.config.wifiCount = Number(event.target.value);
     render();
+  });
+
+  el.copySummaryBtn.addEventListener('click', () => {
+    copySummary().catch(() => {
+      el.copyStatus.textContent = 'Nie udało się skopiować podsumowania.';
+    });
   });
 }
 
+function sanityCheck() {
+  if (!globalThis.CalculatorCore) throw new Error('CalculatorCore nie jest dostępny.');
+  if (!state.prices) throw new Error('Brak danych cenowych.');
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
-  Object.assign(el, {
-    loadStatus: document.getElementById('loadStatus'),
-    mainPromotion: document.getElementById('mainPromotion'),
-    multiroomCount: document.getElementById('multiroomCount'),
-    wifiCount: document.getElementById('wifiCount'),
-    symmetricConnection: document.getElementById('symmetricConnection'),
-    symmetricHint: document.getElementById('symmetricHint'),
-    summaryMonthly: document.getElementById('summaryMonthly'),
-    summaryOneTime: document.getElementById('summaryOneTime'),
-    summaryDetails: document.getElementById('summaryDetails'),
-    summaryBenefits: document.getElementById('summaryBenefits'),
-    sidebarMonthly: document.getElementById('sidebarMonthly'),
-    totalMonthly: document.getElementById('totalMonthly'),
-    totalOneTime: document.getElementById('totalOneTime'),
-    avgMonthly: document.getElementById('avgMonthly'),
-    promoSchedule: document.getElementById('promoSchedule'),
-    promoSavings: document.getElementById('promoSavings'),
-    multiroomCountDisplay: document.getElementById('multiroomCountDisplay'),
-    wifiCountDisplay: document.getElementById('wifiCountDisplay'),
-    copySummaryBtn: document.getElementById('copySummaryBtn'),
-    copyStatus: document.getElementById('copyStatus'),
-  });
-
-  restoreState();
-
   try {
+    collectDom();
+    restoreState();
     await loadPrices();
+    sanityCheck();
+    hideLoadError();
+    bindEvents();
+    render();
   } catch (error) {
-    el.loadStatus.textContent = error.message;
-    el.loadStatus.classList.remove('hidden');
-    return;
+    console.error(error);
+    showLoadError(`Błąd inicjalizacji kalkulatora: ${error.message}`);
   }
-
-  bindInputs();
-  render();
 });
