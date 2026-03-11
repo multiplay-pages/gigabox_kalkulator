@@ -1,9 +1,0 @@
-{
-  "name": "gigabox-kalkulator",
-  "private": true,
-  "version": "1.0.0",
-  "scripts": {
-    "check": "node --check calculator-core.js && node --check script.js",
-    "test": "node --test tests/calculator.test.js"
-  }
-}
