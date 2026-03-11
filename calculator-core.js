@@ -95,10 +95,12 @@
   }
 
   function getTvPricing(prices, config) {
-    const monthlyLines = [{ label: 'TV Multi (obowiązkowe)', value: prices.tvMulti }];
-    const addonLines = (config.tvAddons || []).map((key) => ({ label: prices.labels.tvAddons[key], value: prices.tvAddons[key] }));
-    return { monthlyLines: [...monthlyLines, ...addonLines] };
-  }
+  const addonLines = (config.tvAddons || []).map((key) => ({
+    label: prices.labels.tvAddons[key],
+    value: prices.tvAddons[key],
+  }));
+  return { monthlyLines: addonLines };
+}
 
   function getMultiroomPricing(prices, config) {
     const count = Number(config.multiroomCount) || 0;
@@ -237,6 +239,20 @@
 
   function buildSummaryModel(rawConfig, prices) {
     const config = enforceRules(rawConfig);
+  function buildBenefitsBreakdown(benefits, contractMonths) {
+    return benefits
+      .filter((benefit) => benefit.monthlySavings > 0 || benefit.oneTimeSavings > 0)
+      .map((benefit) => {
+        const parts = [];
+        if (benefit.monthlySavings > 0) parts.push(`-${money(benefit.monthlySavings)}/mies.`);
+        if (benefit.oneTimeSavings > 0) parts.push(`-${money(benefit.oneTimeSavings)} jednorazowo`);
+        return { label: benefit.label, text: parts.join(' oraz ') };
+      });
+  }
+
+  function buildSummaryModel(rawConfig, rawPrices) {
+    const prices = rawPrices;
+    const config = enforceRules(normalizeConfig(rawConfig));
 
     const monthlyItems = [];
     const oneTimeItems = [];
@@ -265,6 +281,33 @@
     monthlyItems.push(...getCanalPricing(prices, config));
     monthlyItems.push(...getBitdefenderPricing(prices, config));
     monthlyItems.push(...getPhonePricing(prices, config));
+    const basePrice = getBaseSubscriptionPrice(prices, config);
+    monthlyItems.push({ label: 'Abonament bazowy (internet + TV Multi + sprzęt + utrzymanie linii)', value: basePrice });
+
+    const consent = getConsentAdjustments(prices, config);
+    monthlyItems.push(...consent.lines.map((line) => ({ label: line.label, value: line.value })));
+
+    const symmetric = getSymmetricPricing(prices, config);
+    monthlyItems.push(...symmetric.lines.map((line) => ({ label: line.label, value: line.value })));
+    benefits.push(...symmetric.benefits);
+
+    const tv = getTvPricing(prices, config);
+    monthlyItems.push(...tv.monthlyLines.map((line) => ({ label: line.label, value: line.value })));
+
+    const multiroom = getMultiroomPricing(prices, config);
+    monthlyItems.push(...multiroom.monthlyLines.map((line) => ({ label: line.label, value: line.value })));
+    oneTimeItems.push(...multiroom.oneTimeLines.map((line) => ({ label: line.label, value: line.value })));
+    benefits.push(...multiroom.benefits);
+
+    const wifi = getWifiPremiumPricing(prices, config);
+    monthlyItems.push(...wifi.monthlyLines.map((line) => ({ label: line.label, value: line.value })));
+    oneTimeItems.push(...wifi.oneTimeLines.map((line) => ({ label: line.label, value: line.value })));
+    benefits.push(...wifi.benefits);
+
+    monthlyItems.push(...getInternetPlusPricing(prices, config).monthlyLines.map((line) => ({ label: line.label, value: line.value })));
+    monthlyItems.push(...getCanalPricing(prices, config).monthlyLines.map((line) => ({ label: line.label, value: line.value })));
+    monthlyItems.push(...getBitdefenderPricing(prices, config).monthlyLines.map((line) => ({ label: line.label, value: line.value })));
+    monthlyItems.push(...getPhonePricing(prices, config).monthlyLines.map((line) => ({ label: line.label, value: line.value })));
 
     oneTimeItems.unshift({ label: 'Instalacja Internet + TV', value: prices.installation });
 
@@ -370,6 +413,8 @@
     normalizeConfig,
     enforceRules,
     speedAllowed,
+    speedAllowed,
+    enforceRules,
     getBaseSubscriptionPrice,
     getConsentAdjustments,
     getSymmetricPricing,
@@ -378,6 +423,8 @@
     getWifiPremiumPricing,
     getInternetPlusPricing,
     getCanalPricing,
+    getWifiPremiumPricing,
+    getMultiroomPricing,
     getBitdefenderPricing,
     getPhonePricing,
     getPromotionConfig,
