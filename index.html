@@ -13,19 +13,19 @@
   <header class="hero">
     <img class="hero-logo" src="./logo_multiplay_new.svg" alt="Multiplay" />
     <h1>Kalkulator Oferty GigaBOX</h1>
-    <p>Jedna przewijana strona, pełna konfiguracja i sticky podsumowanie jak w GigaNET.</p>
+    <p>Oferta 03.2026 GigaBox_3.1_MESH_10ZL • jedna przewijana strona</p>
   </header>
 
   <main class="layout">
     <section class="form-column">
       <nav class="toc" aria-label="Spis sekcji">
         <a href="#parametry">1. Parametry oferty</a>
-        <a href="#zgody">2. Zgody i telewizja</a>
-        <a href="#pakiety-tv">3. Pakiety TV</a>
+        <a href="#zgody">2. Zgody</a>
+        <a href="#telewizja">3. Telewizja</a>
         <a href="#internet">4. Internet i bezpieczeństwo</a>
         <a href="#telefon">5. Telefon stacjonarny</a>
         <a href="#promocje">6. Promocje i benefity</a>
-        <a href="#podsumowanie">7. Podsumowanie oferty</a>
+        <a href="#podsumowanie">7. Podsumowanie</a>
       </nav>
 
       <div class="load-status hidden" id="loadStatus" role="status" aria-live="polite"></div>
@@ -33,49 +33,46 @@
       <section id="parametry" class="section-card">
         <h2><span>1</span>Parametry oferty</h2>
         <div class="grid two">
-          <label class="option-card"><input type="radio" name="contractPeriod" value="12" />12 miesięcy</label>
-          <label class="option-card"><input type="radio" name="contractPeriod" value="24" checked />24 miesiące</label>
+          <label class="option-card" title="Wybierz długość zobowiązania"><input type="radio" name="contractPeriod" value="12" />12 miesięcy</label>
+          <label class="option-card" title="Wybierz długość zobowiązania"><input type="radio" name="contractPeriod" value="24" checked />24 miesiące</label>
           <label class="option-card"><input type="radio" name="buildingType" value="SFH" checked />Domek (SFH)</label>
           <label class="option-card"><input type="radio" name="buildingType" value="MFH" />Blok (MFH)</label>
           <label class="option-card"><input type="radio" name="customerStatus" value="new" checked />Nowy klient</label>
           <label class="option-card"><input type="radio" name="customerStatus" value="existing" />Obecny klient</label>
         </div>
 
-        <label class="switch-row">
+        <label class="switch-row" title="Taryfy 100/10, 350/35, 500/100 dostępne wyłącznie przy ograniczeniach technicznych">
           <input id="technicalLimit" type="checkbox" />
-          <span>Ograniczenia techniczne (odblokowuje taryfy &lt; 600 Mb/s)</span>
+          <span>Ograniczenia techniczne (odblokuj taryfy &lt; 600 Mb/s)</span>
         </label>
 
-        <div class="grid two" id="internetSpeedGrid">
+        <div class="grid two">
           <label class="option-card" data-speed="100/10"><input type="radio" name="internetSpeed" value="100/10" />100/10 Mb/s <small>tylko przy ograniczeniach technicznych</small></label>
           <label class="option-card" data-speed="350/35"><input type="radio" name="internetSpeed" value="350/35" />350/35 Mb/s <small>tylko przy ograniczeniach technicznych</small></label>
           <label class="option-card" data-speed="500/100"><input type="radio" name="internetSpeed" value="500/100" />500/100 Mb/s <small>tylko przy ograniczeniach technicznych</small></label>
-          <label class="option-card" data-speed="600/100"><input type="radio" name="internetSpeed" value="600/100" checked />600/100 Mb/s <small id="price-600/100"></small></label>
-          <label class="option-card" data-speed="800/200"><input type="radio" name="internetSpeed" value="800/200" />800/200 Mb/s <small id="price-800/200"></small></label>
-          <label class="option-card" data-speed="1000/300"><input type="radio" name="internetSpeed" value="1000/300" />1000/300 Mb/s <small id="price-1000/300"></small></label>
-          <label class="option-card" data-speed="2000/2000"><input type="radio" name="internetSpeed" value="2000/2000" />2000/2000 Mb/s <small id="price-2000/2000"></small></label>
+          <label class="option-card" data-speed="600/100"><input type="radio" name="internetSpeed" value="600/100" checked />600/100 Mb/s <small id="price-600-100"></small></label>
+          <label class="option-card" data-speed="800/200"><input type="radio" name="internetSpeed" value="800/200" />800/200 Mb/s <small id="price-800-200"></small></label>
+          <label class="option-card" data-speed="1000/300"><input type="radio" name="internetSpeed" value="1000/300" />1000/300 Mb/s <small id="price-1000-300"></small></label>
+          <label class="option-card" data-speed="2000/2000"><input type="radio" name="internetSpeed" value="2000/2000" />2000/2000 Mb/s <small id="price-2000-2000"></small></label>
         </div>
       </section>
 
       <section id="zgody" class="section-card">
-        <h2><span>2</span>Zgody i telewizja</h2>
-        <div class="grid two">
-          <label class="option-card"><input id="eInvoice" type="checkbox" checked />E-faktura (rabat 10 zł/mies.)</label>
-          <label class="option-card"><input id="marketing" type="checkbox" checked />Zgoda marketingowa (rabat 5 zł/mies.)</label>
-          <label class="option-card"><input id="symmetricConnection" type="checkbox" />Łącze symetryczne (+10 zł/mies., obecny klient: rabat 5 zł)</label>
-        </div>
-        <p class="hint">Brak e-faktury = +10 zł, brak zgody marketingowej = +5 zł. Ceny bazowe zawierają oba rabaty.</p>
+        <h2><span>2</span>Zgody</h2>
+        <label class="switch-row" title="Cena bazowa zawiera rabat e-faktury"><input id="eInvoice" type="checkbox" checked />E-faktura (rabat 10 zł/mies.)</label>
+        <label class="switch-row" title="Cena bazowa zawiera rabat zgody marketingowej"><input id="marketing" type="checkbox" checked />Zgoda marketingowa (rabat 5 zł/mies.)</label>
+        <p class="hint">Ceny bazowe internetu zawierają oba rabaty. Brak e-faktury = +10 zł, brak zgody marketingowej = +5 zł.</p>
       </section>
 
-      <section id="pakiety-tv" class="section-card">
-        <h2><span>3</span>Pakiety TV</h2>
+      <section id="telewizja" class="section-card">
+        <h2><span>3</span>Telewizja</h2>
         <p class="mandatory">TV Multi (obowiązkowe): 109,97 zł/mies.</p>
-        <div class="slider-row">
+
+        <div class="slider-row" title="15 zł/mies. i 99 zł aktywacji za każdą sztukę">
           <label for="multiroomCount">Multiroom: <strong id="multiroomCountDisplay">0 szt.</strong></label>
           <input id="multiroomCount" type="range" min="0" max="5" value="0" />
-          <p>15 zł/mies. i 99 zł aktywacji za każdy multiroom.</p>
         </div>
-        <label class="switch-row"><input id="multiroomAssistance" type="checkbox" />Asysta technika (+100 zł jednorazowo)</label>
+        <label class="switch-row" title="Jednorazowa dopłata 100 zł, niezależnie od liczby urządzeń"><input id="multiroomAssistance" type="checkbox" />Asysta technika (+100 zł jednorazowo)</label>
 
         <div class="grid three">
           <label class="option-card"><input type="checkbox" name="tvAddons" value="pvrM" />PVR M (10 zł)</label>
@@ -86,19 +83,19 @@
 
       <section id="internet" class="section-card">
         <h2><span>4</span>Internet i bezpieczeństwo</h2>
-        <div class="slider-row">
+        <label class="switch-row" title="Standardowo +10 zł/mies., dla obecnego klienta +5 zł/mies.; przy 2000/2000 w cenie"><input id="symmetricConnection" type="checkbox" />Łącze symetryczne <small id="symmetricHint"></small></label>
+
+        <div class="slider-row" title="10 zł/mies./szt. i 89 zł aktywacji/szt.">
           <label for="wifiCount">WiFi Premium (MESH): <strong id="wifiCountDisplay">0 szt.</strong></label>
           <input id="wifiCount" type="range" min="0" max="5" value="0" />
-          <p>10 zł/mies./szt. + aktywacja 89 zł/szt.</p>
         </div>
 
         <label class="switch-row"><input id="internetPlus" type="checkbox" />Internet+ (10 zł/mies.)</label>
 
-        <h3>Canal+ (zobowiązania 12 miesięcy)</h3>
-        <div class="grid three">
-          <label class="option-card"><input type="checkbox" name="canalPlus" value="superSport" />Super Sport (64,99 zł)</label>
-          <label class="option-card"><input type="checkbox" name="canalPlus" value="serialeFilmy" />Seriale i Filmy (24,99 zł)</label>
-          <label class="option-card"><input type="checkbox" name="canalPlus" value="entry" />Canal+ Entry (19,99 zł)</label>
+        <h3>Canal+ (osobne zobowiązanie 12 mies.)</h3>
+        <div class="grid two">
+          <label class="option-card"><input type="checkbox" name="canalPlus" value="serialeFilmy" />Canal+ Seriale i Filmy (24,99 zł)</label>
+          <label class="option-card"><input type="checkbox" name="canalPlus" value="superSport" />Canal+ Super Sport (64,99 zł)</label>
         </div>
 
         <h3>Bitdefender (wybór jednego wariantu)</h3>
@@ -106,36 +103,36 @@
           <label class="option-card"><input type="radio" name="bitdefender" value="none" checked />Brak pakietu</label>
           <label class="option-card"><input type="radio" name="bitdefender" value="internetSecurity1" />Internet Security 1 (9 zł)</label>
           <label class="option-card"><input type="radio" name="bitdefender" value="internetSecurity3" />Internet Security 3 (14,99 zł)</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="mobile" />Mobile (6 zł)</label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="mobileSecurity" />Mobile Security (6 zł)</label>
           <label class="option-card"><input type="radio" name="bitdefender" value="familyPack" />Family Pack (20 zł)</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="antivirusMac1" />Antywirus Mac 1 (9 zł)</label>
-          <label class="option-card"><input type="radio" name="bitdefender" value="antivirusMac3" />Antywirus Mac 3 (14,99 zł)</label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="antivirusMac1" />Antivirus for Mac 1 (9 zł)</label>
+          <label class="option-card"><input type="radio" name="bitdefender" value="antivirusMac3" />Antivirus for Mac 3 (14,99 zł)</label>
         </div>
       </section>
 
       <section id="telefon" class="section-card">
         <h2><span>5</span>Telefon stacjonarny</h2>
         <label class="switch-row"><input id="phoneService" type="checkbox" />Telefon bez limitu Max (9,99 zł/mies.)</label>
-        <p class="hint">Opis oferty: <a href="https://multiplay.pl/telefon" target="_blank" rel="noreferrer noopener">multiplay.pl/telefon</a>.</p>
+        <p class="hint">Opis oferty telefonu: <a href="https://multiplay.pl/telefon" target="_blank" rel="noopener noreferrer">multiplay.pl/telefon</a></p>
       </section>
 
       <section id="promocje" class="section-card">
         <h2><span>6</span>Promocje i benefity</h2>
-        <label>Promocja główna (miesiące za 1 zł)
-          <select id="mainPromotion">
-            <option value="none">Brak</option>
-            <option value="start">Na start</option>
-            <option value="ztr">ZTR</option>
-            <option value="wroc">Wróć do Multiplay</option>
-            <option value="banerowa">Banerowa</option>
-          </select>
-        </label>
-        <label class="switch-row"><input id="promoAddonTo1" type="checkbox" />Obniżenie Multiroom / WiFi Premium do 1 zł (odnawiający)</label>
-        <label class="switch-row"><input id="promoMultiroomGift" type="checkbox" />Multiroom w prezencie (pierwsza sztuka gratis, tylko obecny klient)</label>
+        <label for="mainPromotion">Promocja główna (miesiące za 1 zł)</label>
+        <select id="mainPromotion">
+          <option value="none">Brak</option>
+          <option value="start">Na start</option>
+          <option value="ztr">ZTR</option>
+          <option value="wroc">Wróć do Multiplay</option>
+          <option value="banerowa">Banerowa</option>
+        </select>
+
+        <label class="switch-row" title="Dla obecnych klientów: Multiroom i WiFi Premium po 1 zł/mies./szt."><input id="promoAddonTo1" type="checkbox" />Obniżenie abonamentu za Multiroom/WiFi Premium do 1 zł</label>
+        <label class="switch-row" title="Dla obecnych klientów: pierwszy Multiroom gratis (miesięcznie i aktywacja)"><input id="promoMultiroomGift" type="checkbox" />Multiroom w prezencie</label>
       </section>
 
       <section id="podsumowanie" class="section-card">
-        <h2><span>7</span>Podsumowanie oferty</h2>
+        <h2><span>7</span>Podsumowanie</h2>
         <div class="summary-grid">
           <div>
             <h3>Koszty miesięczne</h3>
@@ -147,7 +144,7 @@
             <h3>Szczegóły umowy</h3>
             <div id="summaryDetails" class="list"></div>
             <h3>Aktywna promocja i benefity</h3>
-            <div id="summaryPromos" class="list"></div>
+            <div id="summaryBenefits" class="list"></div>
           </div>
         </div>
         <button id="copySummaryBtn" class="btn-copy" type="button">Kopiuj podsumowanie</button>
@@ -155,21 +152,21 @@
       </section>
     </section>
 
-    <aside class="sidebar sticky">
+    <aside class="sidebar sticky" id="sidebar">
       <h3>Cena końcowa</h3>
-      <div id="sidebarMonthly" class="list compact"></div>
       <div class="totals">
         <div><span>Miesięcznie</span><strong id="totalMonthly">0,00 zł</strong></div>
         <div><span>Start</span><strong id="totalOneTime">0,00 zł</strong></div>
         <div><span>Uśredniona wartość abonamentu</span><strong id="avgMonthly">0,00 zł</strong></div>
-        <div><span>Abonament w okresach promocji</span><strong id="promoMonthlyDisplay">—</strong></div>
+        <div><span>Abonament w okresach promocji</span><strong id="promoSchedule">Brak promocji abonamentowej</strong></div>
         <div><span>Łączna oszczędność z promocji</span><strong id="promoSavings">0,00 zł</strong></div>
       </div>
-      <h4>Parametry</h4>
-      <div id="sidebarDetails" class="list compact"></div>
+      <h4>Szczegóły kosztów</h4>
+      <div id="sidebarMonthly" class="list compact"></div>
     </aside>
   </main>
 
+  <script src="calculator-core.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

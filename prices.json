@@ -7,19 +7,19 @@
             "100/10": 129.99,
             "350/35": 132.99,
             "500/100": 134.99,
-            "600/100": 140.00,
-            "800/200": 145.00,
-            "1000/300": 150.00,
-            "2000/2000": 205.00
+            "600/100": 140,
+            "800/200": 145,
+            "1000/300": 150,
+            "2000/2000": 205
           },
           "existing": {
             "100/10": 129.99,
             "350/35": 132.99,
             "500/100": 134.99,
-            "600/100": 140.00,
-            "800/200": 145.00,
-            "1000/300": 150.00,
-            "2000/2000": 205.00
+            "600/100": 140,
+            "800/200": 145,
+            "1000/300": 150,
+            "2000/2000": 205
           }
         },
         "MFH": {
@@ -27,19 +27,19 @@
             "100/10": 109.99,
             "350/35": 112.99,
             "500/100": 114.99,
-            "600/100": 120.00,
-            "800/200": 125.00,
-            "1000/300": 130.00,
-            "2000/2000": 185.00
+            "600/100": 120,
+            "800/200": 125,
+            "1000/300": 130,
+            "2000/2000": 185
           },
           "existing": {
             "100/10": 109.99,
             "350/35": 112.99,
             "500/100": 114.99,
-            "600/100": 120.00,
-            "800/200": 125.00,
-            "1000/300": 130.00,
-            "2000/2000": 185.00
+            "600/100": 120,
+            "800/200": 125,
+            "1000/300": 130,
+            "2000/2000": 185
           }
         }
       },
@@ -49,19 +49,19 @@
             "100/10": 124.99,
             "350/35": 127.99,
             "500/100": 129.99,
-            "600/100": 135.00,
-            "800/200": 140.00,
-            "1000/300": 145.00,
-            "2000/2000": 200.00
+            "600/100": 135,
+            "800/200": 140,
+            "1000/300": 145,
+            "2000/2000": 200
           },
           "existing": {
             "100/10": 124.99,
             "350/35": 127.99,
             "500/100": 129.99,
-            "600/100": 135.00,
-            "800/200": 140.00,
-            "1000/300": 145.00,
-            "2000/2000": 200.00
+            "600/100": 135,
+            "800/200": 140,
+            "1000/300": 145,
+            "2000/2000": 200
           }
         },
         "MFH": {
@@ -69,19 +69,19 @@
             "100/10": 104.99,
             "350/35": 107.99,
             "500/100": 109.99,
-            "600/100": 115.00,
-            "800/200": 120.00,
-            "1000/300": 125.00,
-            "2000/2000": 180.00
+            "600/100": 115,
+            "800/200": 120,
+            "1000/300": 125,
+            "2000/2000": 180
           },
           "existing": {
             "100/10": 104.99,
             "350/35": 107.99,
             "500/100": 109.99,
-            "600/100": 115.00,
-            "800/200": 120.00,
-            "1000/300": 125.00,
-            "2000/2000": 180.00
+            "600/100": 115,
+            "800/200": 120,
+            "1000/300": 125,
+            "2000/2000": 180
           }
         }
       }
@@ -95,6 +95,11 @@
       "existingDiscount": 5
     },
     "tvMulti": 109.97,
+    "tvAddons": {
+      "pvrM": 10,
+      "pvrL": 15,
+      "tvMax": 40
+    },
     "multiroom": {
       "monthly": 15,
       "activation": 99,
@@ -108,23 +113,74 @@
     "bitdefender": {
       "internetSecurity1": 9,
       "internetSecurity3": 14.99,
-      "mobile": 6,
+      "mobileSecurity": 6,
       "familyPack": 20,
       "antivirusMac1": 9,
       "antivirusMac3": 14.99
     },
     "canalPlus": {
-      "superSport": 64.99,
       "serialeFilmy": 24.99,
-      "entry": 19.99
+      "superSport": 64.99
     },
     "phoneService": 9.99,
     "installation": 249,
-    "promo": {
-      "monthsFor1zl": 3,
-      "promoMonthlyPrice": 1,
-      "reducedAddonPrice": 1,
+    "promoRules": {
       "minimumServiceMonths": 3
+    },
+    "promotions": {
+      "none": {
+        "label": "Brak promocji",
+        "monthlyForOneActive": false,
+        "monthsForOne": 0,
+        "promoMonthlyPrice": 0
+      },
+      "start": {
+        "label": "Na start",
+        "monthlyForOneActive": true,
+        "monthsForOne": 3,
+        "promoMonthlyPrice": 1
+      },
+      "ztr": {
+        "label": "ZTR",
+        "monthlyForOneActive": true,
+        "monthsForOne": 3,
+        "promoMonthlyPrice": 1
+      },
+      "wroc": {
+        "label": "Wróć do Multiplay",
+        "monthlyForOneActive": true,
+        "monthsForOne": 3,
+        "promoMonthlyPrice": 1
+      },
+      "banerowa": {
+        "label": "Banerowa",
+        "monthlyForOneActive": true,
+        "monthsForOne": 3,
+        "promoMonthlyPrice": 1
+      }
+    },
+    "promo": {
+      "reducedAddonPrice": 1
+    },
+    "labels": {
+      "tvAddons": {
+        "pvrM": "PVR M",
+        "pvrL": "PVR L",
+        "tvMax": "TV Max"
+      },
+      "canalPlus": {
+        "serialeFilmy": "Canal+ Seriale i Filmy",
+        "superSport": "Canal+ Super Sport"
+      },
+      "bitdefender": {
+        "none": "Brak pakietu",
+        "internetSecurity1": "Internet Security 1",
+        "internetSecurity3": "Internet Security 3",
+        "mobileSecurity": "Mobile Security",
+        "familyPack": "Family Pack",
+        "antivirusMac1": "Antivirus for Mac 1",
+        "antivirusMac3": "Antivirus for Mac 3"
+      }
     }
   }
 }
