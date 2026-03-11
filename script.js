@@ -19,7 +19,6 @@ function restoreState() {
   } catch {
     config = { ...CalculatorCore.DEFAULT_CONFIG };
   }
-}
 
 async function loadPrices() {
   const response = await fetch('./prices.json', { cache: 'no-store' });
