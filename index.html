@@ -436,10 +436,15 @@
               <h3>Promocja główna</h3>
               <label for="promo" class="sr-only">Promocja główna</label>
               <select class="select" id="promo"></select>
-              <div style="height:12px"></div>
-              <label for="promo-months" class="sr-only">Liczba miesięcy potwierdzona dokumentem</label>
-              <input class="input" type="number" min="1" max="12" id="promo-months" value="6" hidden>
-              <div class="hint" id="promo-note">Brak promocji głównej.</div>
+              
+              <div id="promo-months-wrap" style="display: none; margin-top: 12px;">
+                <label id="promo-months-label" for="promo-months" style="display: block; font-weight: bold; margin-bottom: 6px; font-size: 0.9rem;">
+                  Ilość miesięcy promocyjnych (do 1zł):
+                </label>
+                <input class="input" type="number" min="1" max="24" id="promo-months" value="1">
+              </div>
+
+              <div class="hint" id="promo-note" style="margin-top: 12px; display: none;">Brak promocji głównej.</div>
             </div>
             <div class="box">
               <h3>Dodatkowy benefit</h3>
