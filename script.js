@@ -308,28 +308,37 @@ function updatePromoOptions() {
       state.promo = "none";
   }
 
+  const showMonths = (state.promo === "ztr" || state.promo === "powrot" || state.promo === "retention");
+  
   const promoMonthsWrap = document.getElementById("promo-months-wrap");
+  const promoMonthsInput = document.getElementById("promo-months");
+  const promoMonthsLabel = document.getElementById("promo-months-label");
+
   if (promoMonthsWrap) {
-      promoMonthsWrap.style.display = (state.promo === "ztr" || state.promo === "powrot" || state.promo === "retention") ? "block" : "none";
+      promoMonthsWrap.style.display = showMonths ? "" : "none";
+  } else if (promoMonthsInput && promoMonthsInput.parentElement) {
+      promoMonthsInput.parentElement.style.display = showMonths ? "" : "none";
   }
   
-  const giftWrap = document.getElementById("gift-wrap");
-  if (giftWrap) giftWrap.style.display = isNew ? "none" : "block";
-  
-  const promoMonthsLabel = document.getElementById("promo-months-label");
-  if(promoMonthsLabel) {
-      if(state.promo === "retention") {
+  if (promoMonthsLabel) {
+      if (state.promo === "retention") {
           promoMonthsLabel.textContent = "Ilość miesięcy promocyjnych (do 1zł):";
       } else {
           promoMonthsLabel.textContent = "Pozostałe miesiące u obecnego operatora:";
       }
   }
 
-  const promoMonthsInput = document.getElementById("promo-months");
-  if(promoMonthsInput) promoMonthsInput.value = state.promoMonths;
+  if (promoMonthsInput) promoMonthsInput.value = state.promoMonths;
 
+  const giftWrap = document.getElementById("gift-wrap");
+  if (giftWrap) {
+      giftWrap.style.display = isNew ? "none" : "";
+  }
+  
   const bannerWrap = document.getElementById("banner-wrap");
-  if (bannerWrap) bannerWrap.style.display = (state.promo !== "none") ? "flex" : "none";
+  if (bannerWrap) {
+      bannerWrap.style.display = (state.promo !== "none") ? "" : "none";
+  }
 }
 
 function render() {
@@ -393,7 +402,6 @@ function render() {
   const calc = calculatePrice();
   if(!calc) return;
   
-  // -- PRZYPISYWANIE WYNIKÓW DO HTML (ZGODNIE Z NOWYMI ID) --
   const e = (id) => document.getElementById(id);
 
   if(e("summary-monthly")) e("summary-monthly").textContent = formatMoney(calc.monthly);
@@ -417,7 +425,6 @@ function render() {
   if(e("sum-mesh-activation")) e("sum-mesh-activation").textContent = calc.meshActivation > 0 ? `+ ${formatMoney(calc.meshActivation)}` : "0,00 zł";
   if(e("sum-tech")) e("sum-tech").textContent = calc.tech > 0 ? `+ ${formatMoney(calc.tech)}` : "0,00 zł";
 
-  // -- SEKCJA PROMOCJI I BENEFITÓW --
   const benList = [];
   if (calc.promoLabel) benList.push(`<strong>${calc.promoLabel}</strong><div class="tiny" style="font-size:12px;color:var(--muted)">${calc.promoNote}</div>`);
   if (calc.bannerMonths > 0) benList.push(`<strong>Promocja Banerowa</strong><div class="tiny" style="font-size:12px;color:var(--muted)">1 mies. za 1 zł przedłużenia</div>`);
