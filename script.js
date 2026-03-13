@@ -31,7 +31,7 @@ let priceConfig = {
   addons: {}
 };
 
-const STORAGE_KEY = "gigabox_calc_state_v6";
+const STORAGE_KEY = "gigabox_calc_state_v7";
 
 function byId(id) {
   return document.getElementById(id);
@@ -136,7 +136,7 @@ function validateState() {
   if (!promoOptions.includes(state.promo)) state.promo = "none";
 
   const giftOptions = state.status === "current"
-    ? ["none", "wifi12", "router"]
+    ? ["none", "wifi12", "multiroom9", "router"]
     : ["none"];
 
   if (!giftOptions.includes(state.gift)) state.gift = "none";
@@ -249,6 +249,7 @@ function renderPromoControls() {
       ? `
           <option value="none">Brak dodatkowego benefitu</option>
           <option value="wifi12">WiFi Premium za 1 zł przez 12 mies.</option>
+          <option value="multiroom9">Multiroom: 1 dekoder za 1 zł przez 9 mies.</option>
           <option value="router">Wymiana routera</option>
         `
       : `
@@ -282,6 +283,8 @@ function renderPromoControls() {
       giftNote.textContent = "Benefity odnowieniowe są przeznaczone dla obecnych klientów i mogą wymagać dodatkowego potwierdzenia w systemie.";
     } else if (state.gift === "wifi12") {
       giftNote.textContent = "Benefit: WiFi Premium za 1 zł przez 12 mies. dla wybranych urządzeń MESH.";
+    } else if (state.gift === "multiroom9") {
+      giftNote.textContent = "Benefit: opłata za 1 dekoder Multiroom spada do 1 zł / mies. przez 9 mies. Pozostałe dekodery są liczone standardowo.";
     } else if (state.gift === "router") {
       giftNote.textContent = "Benefit: wymiana routera. To benefit pozacenowy — nie zmienia miesięcznego abonamentu.";
     } else {
@@ -466,9 +469,15 @@ function calculate() {
     if (state.gift === "wifi12" && state.meshCount > 0) {
       giftLabel = "WiFi Premium 1 zł / 12 mies.";
       giftNote = "Dla urządzeń MESH opłata miesięczna spada do 1 zł / szt. przez 12 mies.";
+    } else if (state.gift === "multiroom9" && state.multiroomCount > 0) {
+      giftLabel = "Multiroom 1 zł / 9 mies.";
+      giftNote = "Opłata za 1 dekoder Multiroom spada do 1 zł / mies. przez 9 mies. Pozostałe dekodery są liczone standardowo.";
     } else if (state.gift === "router") {
       giftLabel = "Wymiana routera";
       giftNote = "Benefit pozacenowy — bez wpływu na abonament miesięczny.";
+    } else if (state.gift === "multiroom9") {
+      giftLabel = "Multiroom 1 zł / 9 mies.";
+      giftNote = "Benefit jest dostępny po dodaniu co najmniej 1 dekodera Multiroom.";
     }
   }
 
@@ -485,6 +494,8 @@ function calculate() {
       monthPrice = 1;
     } else if (state.status === "current" && state.gift === "wifi12" && state.meshCount > 0 && month <= 12) {
       monthPrice = monthPrice - meshMonthly + state.meshCount;
+    } else if (state.status === "current" && state.gift === "multiroom9" && state.multiroomCount > 0 && month <= 9) {
+      monthPrice = monthPrice - multiroomMonthlyUnit + 1;
     }
 
     monthPrice = Number(monthPrice.toFixed(2));
