@@ -38,14 +38,14 @@ async function loadPriceConfig() {
     priceConfig = await response.json();
   } catch (error) {
     console.error("Nie udało się załadować prices.json:", error);
-    alert("BŁĄD: Nie udało się pobrać pliku prices.json. Upewnij się, że plik znajduje się w tym samym folderze i korzystasz z serwera lokalnego (np. uruchomiłeś 'python3 -m http.server 4173').");
+    alert("BŁĄD: Nie udało się pobrać pliku prices.json. Upewnij się, że używasz serwera lokalnego.");
   }
 }
 
 // ==========================================
 // 3. PERSISTENCE (LOCAL STORAGE)
 // ==========================================
-const STORAGE_KEY = "gigabox_calc_state_v2";
+const STORAGE_KEY = "gigabox_calc_state_v3";
 
 function saveState() {
   try {
@@ -92,6 +92,7 @@ function calculatePrice() {
   if (!state.ebill) consentPenalty += ebillPenalty;
   if (!state.marketing) consentPenalty += marketingPenalty;
 
+  // --- DODATKI MIESIĘCZNE ---
   let symmetricMonthly = 0;
   if (state.symmetric) {
     symmetricMonthly = state.status === "current" ? (data.addons.symmetricCurrentPreview / 100) : (data.addons.symmetricNew / 100);
@@ -105,25 +106,26 @@ function calculatePrice() {
 
   const securityMonthly = data.addons.security ? (data.addons.security[state.security] / 100 || 0) : 0;
   const multiroomMonthly = state.multiroomCount * (data.addons.multiroomMonthly / 100);
-  
   const meshMonthlyUnit = data.addons.wifiMonthly / 100;
-  const baseMeshMonthly = state.meshCount * meshMonthlyUnit;
+  const meshMonthly = state.meshCount * meshMonthlyUnit;
 
-  const normalAddonsMonthly = symmetricMonthly + internetPlusMonthly + tvMonthly + securityMonthly + multiroomMonthly + baseMeshMonthly;
-  const normalMonthly = base + consentPenalty + normalAddonsMonthly;
+  const otherAddonsMonthly = symmetricMonthly + internetPlusMonthly + securityMonthly + multiroomMonthly;
+  const normalMonthly = base + consentPenalty + otherAddonsMonthly + tvMonthly + meshMonthly;
 
+  // --- OPŁATY JEDNORAZOWE ---
   const multiroomActivation = state.multiroomCount * (data.addons.multiroomActivation / 100);
   const multiroomTech = state.multiroomCount > 0 && state.multiroomInstall === "tech" ? (data.addons.techVisit / 100) : 0;
   const meshActivation = state.meshCount * (data.addons.wifiActivation / 100);
   const meshTech = state.meshCount > 0 && state.meshInstall === "tech" ? (data.addons.techVisit / 100) : 0;
+  const totalTech = multiroomTech + meshTech;
 
+  // --- LOGIKA PROMOCJI ---
   let mainPromoMonths = 0;
   let bannerMonths = state.bannerPromo ? 1 : 0;
   let promoLabel = "";
   let promoNote = "";
   let giftLabel = "";
   let giftNote = "";
-  let isRetension = false;
   let installationOverride = installation;
 
   if (state.status === "new") {
@@ -146,7 +148,6 @@ function calculatePrice() {
       mainPromoMonths = Math.min(commitmentMonths, Number(state.promoMonths || 1));
       promoLabel = "Promocja Utrzymaniowa";
       promoNote = `Rabat na wszystkie usługi do 1 zł przez ${mainPromoMonths} mies.`;
-      isRetension = true;
     }
     
     if (state.gift === "wifi12" && state.meshCount > 0) {
@@ -158,6 +159,7 @@ function calculatePrice() {
     }
   }
 
+  // === BUDOWA OSI CZASU ===
   let totalCost = 0;
   const scheduleArray = [];
   const totalPromoMonths = Math.min(commitmentMonths, mainPromoMonths + bannerMonths);
@@ -171,7 +173,7 @@ function calculatePrice() {
     } else {
        monthPrice = normalMonthly;
        if (state.status === "current" && state.gift === "wifi12" && state.meshCount > 0 && month <= 12) {
-         monthPrice -= baseMeshMonthly;
+         monthPrice -= meshMonthly;
          monthPrice += (1 * state.meshCount); 
        }
     }
@@ -206,16 +208,16 @@ function calculatePrice() {
 
   const notes = [];
   if (consentPenalty > 0 && totalPromoMonths > 0) {
-    notes.push("Uwaga: w miesiącach promocyjnych „za 1 zł” kary za brak zgód wciąż obowiązują i podnoszą rachunek.");
+    notes.push("Uwaga: w miesiącach promocyjnych „za 1 zł” kary za brak zgód wciąż obowiązują.");
   }
   if (state.symmetric && state.status === "current") {
-    notes.push("Rabat z 10 zł na 5 zł dla obecnych klientów na łącze symetryczne wchodzi od kolejnego okresu rozliczeniowego i wymaga potwierdzenia.");
+    notes.push("Rabat z 10 zł na 5 zł dla obecnych klientów na łącze symetryczne wymaga potwierdzenia.");
   }
 
   return {
-    base, afterIndefinite, consentPenalty, addonsMonthly: normalAddonsMonthly,
+    base, afterIndefinite, consentPenalty, otherAddonsMonthly, tvMonthly, meshMonthly,
     installation: installationOverride, activation: multiroomActivation,
-    meshActivation, tech: meshTech + multiroomTech, monthly: normalMonthly,
+    meshActivation, tech: totalTech, monthly: normalMonthly,
     averageMonthly, promoLabel, promoNote, bannerMonths, scheduleRows,
     giftLabel, giftNote, totalSavings, notes
   };
@@ -391,76 +393,57 @@ function render() {
   const calc = calculatePrice();
   if(!calc) return;
   
-  const sumMonthly = document.getElementById("summary-monthly");
-  if(sumMonthly) sumMonthly.textContent = formatMoney(calc.monthly);
+  // -- PRZYPISYWANIE WYNIKÓW DO HTML (ZGODNIE Z NOWYMI ID) --
+  const e = (id) => document.getElementById(id);
+
+  if(e("summary-monthly")) e("summary-monthly").textContent = formatMoney(calc.monthly);
+  if(e("summary-start")) e("summary-start").textContent = formatMoney(calc.installation + calc.activation + calc.meshActivation + calc.tech);
+
+  if(e("sum-commitment")) e("sum-commitment").textContent = `${state.commitment} miesięcy`;
+  if(e("sum-building")) e("sum-building").textContent = state.building === "SFH" ? "Domek (SFH)" : "Blok (MFH)";
+  if(e("sum-status")) e("sum-status").textContent = state.status === "new" ? "Nowy klient" : "Obecny klient";
+  if(e("sum-tariff")) e("sum-tariff").textContent = state.tariff;
   
-  const sumStart = document.getElementById("summary-start");
-  const startCost = calc.installation + calc.activation + calc.meshActivation + calc.tech;
-  if(sumStart) sumStart.textContent = formatMoney(startCost);
+  if(e("sum-base")) e("sum-base").textContent = formatMoney(calc.base);
+  if(e("sum-consents")) e("sum-consents").textContent = calc.consentPenalty > 0 ? `+ ${formatMoney(calc.consentPenalty)}` : "0,00 zł";
+  if(e("sum-addons")) e("sum-addons").textContent = calc.otherAddonsMonthly > 0 ? `+ ${formatMoney(calc.otherAddonsMonthly)}` : "0,00 zł";
+  if(e("sum-tv")) e("sum-tv").textContent = calc.tvMonthly > 0 ? `+ ${formatMoney(calc.tvMonthly)}` : "0,00 zł";
+  
+  if(e("sum-mesh-count")) e("sum-mesh-count").textContent = `${state.meshCount}x`;
+  if(e("sum-mesh")) e("sum-mesh").textContent = calc.meshMonthly > 0 ? `+ ${formatMoney(calc.meshMonthly)}` : "0,00 zł";
+  
+  if(e("sum-installation")) e("sum-installation").textContent = formatMoney(calc.installation);
+  if(e("sum-activation")) e("sum-activation").textContent = calc.activation > 0 ? `+ ${formatMoney(calc.activation)}` : "0,00 zł";
+  if(e("sum-mesh-activation")) e("sum-mesh-activation").textContent = calc.meshActivation > 0 ? `+ ${formatMoney(calc.meshActivation)}` : "0,00 zł";
+  if(e("sum-tech")) e("sum-tech").textContent = calc.tech > 0 ? `+ ${formatMoney(calc.tech)}` : "0,00 zł";
 
-  const sumComm = document.getElementById("sum-commitment");
-  if(sumComm) sumComm.textContent = `${state.commitment} miesięcy`;
+  // -- SEKCJA PROMOCJI I BENEFITÓW --
+  const benList = [];
+  if (calc.promoLabel) benList.push(`<strong>${calc.promoLabel}</strong><div class="tiny" style="font-size:12px;color:var(--muted)">${calc.promoNote}</div>`);
+  if (calc.bannerMonths > 0) benList.push(`<strong>Promocja Banerowa</strong><div class="tiny" style="font-size:12px;color:var(--muted)">1 mies. za 1 zł przedłużenia</div>`);
+  if (calc.giftLabel) benList.push(`<strong>${calc.giftLabel}</strong><div class="tiny" style="font-size:12px;color:var(--muted)">${calc.giftNote}</div>`);
+  if (isSymIncluded) benList.push(`<strong>Symetryczne w cenie</strong><div class="tiny" style="font-size:12px;color:var(--muted)">Cecha taryfy 2000/2000</div>`);
+  if (state.meshCount > 0) benList.push(`<strong>MESH: ${state.meshCount} szt.</strong><div class="tiny" style="font-size:12px;color:var(--muted)">Dodatek płatny</div>`);
+  if (state.multiroomCount > 0) benList.push(`<strong>Multiroom: ${state.multiroomCount} szt.</strong><div class="tiny" style="font-size:12px;color:var(--muted)">Dekoder dodatkowy</div>`);
 
-  const sumBuild = document.getElementById("sum-building");
-  if(sumBuild) sumBuild.textContent = state.building === "SFH" ? "Domek (SFH)" : "Blok (MFH)";
+  if(e("summary-badges")) {
+      e("summary-badges").innerHTML = benList.length ? benList.map(b => `<div style="margin-bottom:8px">${b}</div>`).join("") : '<div class="tiny">Brak aktywnych benefitów</div>';
+  }
 
-  const sumStat = document.getElementById("sum-status");
-  if(sumStat) sumStat.textContent = state.status === "new" ? "Nowy klient" : "Obecny klient";
+  if(e("after-indefinite")) e("after-indefinite").textContent = `${formatMoney(calc.monthly + calc.afterIndefinite)} / mies.`;
+  
+  if(e("summary-note")) {
+      e("summary-note").innerHTML = calc.notes.length ? `<ul style="margin:0;padding-left:16px;color:var(--warning)">${calc.notes.map(n => `<li>${n}</li>`).join("")}</ul>` : "Brak dodatkowych uwag.";
+  }
 
-  const sumTariff = document.getElementById("sum-tariff");
-  if(sumTariff) sumTariff.textContent = state.tariff;
+  if(e("promo-average")) e("promo-average").textContent = `${formatMoney(calc.averageMonthly)} / mies.`;
+  if(e("promo-savings")) e("promo-savings").textContent = formatMoney(calc.totalSavings);
 
-  const sumAvg = document.getElementById("sum-avg");
-  if(sumAvg) sumAvg.textContent = `${formatMoney(calc.averageMonthly)} / mies.`;
-
-  const sumSav = document.getElementById("sum-savings");
-  if(sumSav) sumSav.textContent = formatMoney(calc.totalSavings);
-
-  const schedEl = document.getElementById("sum-schedule");
-  if(schedEl) {
-      schedEl.innerHTML = calc.scheduleRows.map(r => {
-        const range = r.start === r.end ? `${r.start} mies.` : `${r.start}–${r.end} mies.`;
+  if(e("promo-schedule")) {
+      e("promo-schedule").innerHTML = calc.scheduleRows.map(r => {
+        const range = r.start === r.end ? `${r.start}. miesiąc` : `${r.start}–${r.end}. miesiąc`;
         return `<div class="schedule-row"><span class="schedule-range">${range}</span><strong class="schedule-price">${formatMoney(r.price)} / mies.</strong></div>`;
       }).join("");
-  }
-
-  const benList = [];
-  if (calc.promoLabel) benList.push(`<strong>${calc.promoLabel}</strong><div class="tiny">${calc.promoNote}</div>`);
-  if (calc.bannerMonths > 0) benList.push(`<strong>Promocja Banerowa</strong><div class="tiny">1 mies. za 1 zł przedłużenia</div>`);
-  if (calc.giftLabel) benList.push(`<strong>${calc.giftLabel}</strong><div class="tiny">${calc.giftNote}</div>`);
-  if (isSymIncluded) benList.push(`<strong>Symetryczne w cenie</strong><div class="tiny">Cecha taryfy 2000/2000</div>`);
-  if (state.meshCount > 0) benList.push(`<strong>MESH: ${state.meshCount} szt.</strong><div class="tiny">Dodatek płatny</div>`);
-  if (state.multiroomCount > 0) benList.push(`<strong>Multiroom: ${state.multiroomCount} szt.</strong><div class="tiny">Dekoder dodatkowy</div>`);
-
-  const benefitsEl = document.getElementById("sum-benefits");
-  if(benefitsEl) {
-      benefitsEl.innerHTML = benList.length ? benList.map(b => `<div style="margin-bottom:8px">${b}</div>`).join("") : '<div class="tiny">Brak</div>';
-  }
-
-  const elBase = document.getElementById("bd-base");
-  if(elBase) elBase.textContent = formatMoney(calc.base);
-  
-  const elConsent = document.getElementById("bd-consent");
-  if(elConsent) elConsent.textContent = calc.consentPenalty > 0 ? `+ ${formatMoney(calc.consentPenalty)}` : "0,00 zł";
-  
-  const elAddons = document.getElementById("bd-addons");
-  if(elAddons) elAddons.textContent = calc.addonsMonthly > 0 ? `+ ${formatMoney(calc.addonsMonthly)}` : "0,00 zł";
-  
-  const elInstall = document.getElementById("bd-install");
-  if(elInstall) elInstall.textContent = formatMoney(calc.installation);
-  
-  const elActivation = document.getElementById("bd-activation");
-  const actTotal = calc.activation + calc.meshActivation + calc.tech;
-  if(elActivation) elActivation.textContent = actTotal > 0 ? `+ ${formatMoney(actTotal)}` : "0,00 zł";
-
-  const notesEl = document.getElementById("sum-notes");
-  if (notesEl) {
-      if (calc.notes.length > 0) {
-        notesEl.style.display = "block";
-        notesEl.innerHTML = `<strong>Ważne uwagi:</strong><ul class="muted-list">${calc.notes.map(n => `<li>${n}</li>`).join("")}</ul>`;
-      } else {
-        notesEl.style.display = "none";
-      }
   }
 }
 
@@ -597,7 +580,6 @@ async function init() {
   render();
 }
 
-// Zabezpieczenie przed niewłaściwym wywołaniem w stosunku do parsowania dokumentu
 function startCalculator() {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
