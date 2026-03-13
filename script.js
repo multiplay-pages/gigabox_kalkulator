@@ -443,16 +443,25 @@ function render() {
       e("summary-note").innerHTML = calc.notes.length ? `<ul style="margin:0;padding-left:16px;color:var(--warning)">${calc.notes.map(n => `<li>${n}</li>`).join("")}</ul>` : "Brak dodatkowych uwag.";
   }
 
+  // --- AKTUALIZACJA BLOKU PODSUMOWANIA PROMOCJI ---
   if(e("promo-average")) e("promo-average").textContent = `${formatMoney(calc.averageMonthly)} / mies.`;
   if(e("promo-savings")) e("promo-savings").textContent = formatMoney(calc.totalSavings);
 
   if(e("promo-schedule")) {
       e("promo-schedule").innerHTML = calc.scheduleRows.map(r => {
         const range = r.start === r.end ? `${r.start}. miesiąc` : `${r.start}–${r.end}. miesiąc`;
-        return `<div class="schedule-row"><span class="schedule-range">${range}</span><strong class="schedule-price">${formatMoney(r.price)} / mies.</strong></div>`;
+        return `<div class="schedule-row">
+                  <span class="schedule-range" style="color:var(--muted); font-size: 0.9rem;">${range}</span>
+                  <strong class="schedule-price" style="font-size: 1.1rem;">${formatMoney(r.price)}</strong>
+                </div>`;
       }).join("");
   }
-}
+
+  // Odśwież też główną tabelę w sekcji "Szczegóły" jeśli istnieje
+  if(e("summary-note")) {
+      e("summary-note").innerHTML = calc.notes.length ? `<ul style="margin:0;padding-left:16px;color:var(--warning)">${calc.notes.map(n => `<li>${n}</li>`).join("")}</ul>` : "Brak dodatkowych uwag.";
+  }
+} // Koniec funkcji render()
 
 // ==========================================
 // 6. INICJALIZACJA I BINDING
