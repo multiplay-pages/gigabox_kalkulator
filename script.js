@@ -82,12 +82,14 @@ function calculatePrice() {
   }
 
   const base = baseTariffPrice / 100;
+  
+  // W GigaBOX installation i indefinite są osobnymi obiektami na poziomie głównym pliku JSON
   const afterIndefinite = (data.indefinite && data.indefinite[state.tariff]) ? (data.indefinite[state.tariff] / 100) : 0; 
   const installation = state.status === "new" && data.installation ? (data.installation[state.tariff] / 100 || 249) : 0;
 
   let consentPenalty = 0;
-  const ebillPenalty = data.addons.consentEbill / 100;
-  const marketingPenalty = data.addons.consentMarketingDisplay / 100;
+  const ebillPenalty = (data.addons.consentEbill || 1000) / 100;
+  const marketingPenalty = (data.addons.consentMarketingDisplay || 500) / 100;
 
   if (!state.ebill) consentPenalty += ebillPenalty;
   if (!state.marketing) consentPenalty += marketingPenalty;
@@ -100,9 +102,10 @@ function calculatePrice() {
 
   const internetPlusMonthly = state.internetPlus ? (data.addons.internetPlus / 100) : 0;
   
-  const tvMonthly = (state.tvCplusFilms ? (data.addons.cplusFilms / 100) : 0) + 
-                    (state.tvPvrM ? (data.addons.pvrM / 100) : 0) + 
-                    (state.tvPvrL ? (data.addons.pvrL / 100) : 0);
+  // Pakiety TV
+  const tvMonthly = (state.tvCplusFilms ? (data.addons.cplusFilms / 100 || 24.99) : 0) + 
+                    (state.tvPvrM ? (data.addons.pvrM / 100 || 10) : 0) + 
+                    (state.tvPvrL ? (data.addons.pvrL / 100 || 15) : 0);
 
   const securityMonthly = data.addons.security ? (data.addons.security[state.security] / 100 || 0) : 0;
   const multiroomMonthly = state.multiroomCount * (data.addons.multiroomMonthly / 100);
@@ -152,6 +155,7 @@ function calculatePrice() {
       isRetension = true;
     }
     
+    // Obsługa benefitów dla obecnego klienta
     if (state.gift === "wifi12" && state.meshCount > 0) {
       giftLabel = "Prezent: WiFi Premium 1 zł";
       giftNote = "Opłata za wszystkie urządzenia Mesh obniżona do 1 zł przez 12 mies.";
@@ -161,7 +165,7 @@ function calculatePrice() {
     }
   }
 
-  // Budowa osi czasu
+  // === BUDOWA OSI CZASU ===
   let totalCost = 0;
   const scheduleArray = [];
   const totalPromoMonths = Math.min(commitmentMonths, mainPromoMonths + bannerMonths);
@@ -172,6 +176,7 @@ function calculatePrice() {
     // Miesiące w głównej promocji abonamentowej (lub utrzymaniowej)
     if (month <= totalPromoMonths) {
        monthPrice = 1;
+       // Kary za brak zgód są nadal doliczane w darmowych miesiącach
        if (consentPenalty > 0) {
          monthPrice += consentPenalty;
        }
@@ -179,7 +184,7 @@ function calculatePrice() {
        // Standardowy miesiąc
        monthPrice = normalMonthly;
        
-       // Nadpisanie WiFi Premium z prezentu (tylko w miesiącach bez innych promocji i maksymalnie do 12. miesiąca)
+       // Nadpisanie raty za WiFi Premium z prezentu (tylko w normalnych miesiącach i maks do 12. miesiąca)
        if (state.status === "current" && state.gift === "wifi12" && state.meshCount > 0 && month <= 12) {
          monthPrice -= baseMeshMonthly;
          monthPrice += (1 * state.meshCount); 
@@ -191,7 +196,7 @@ function calculatePrice() {
     totalCost += monthPrice;
   }
 
-  // Grupowanie osi czasu do wyświetlania
+  // Grupowanie osi czasu do wyświetlania w harmonogramie
   const scheduleRows = [];
   if (scheduleArray.length > 0) {
     let currentVal = scheduleArray[0];
@@ -206,6 +211,7 @@ function calculatePrice() {
     scheduleRows.push({ start: startM, end: scheduleArray.length, price: currentVal });
   }
 
+  // Wyliczenie średniej na podstawie prawdziwego kosztu na osi czasu
   const averageMonthly = Number((totalCost / commitmentMonths).toFixed(2));
   
   const theoreticalTotalCost = normalMonthly * commitmentMonths;
@@ -259,6 +265,7 @@ function renderTariffs() {
 
   const currentBuildingConfig = priceConfig.base[state.commitment][state.building];
   
+  // Jeśli dla wybranego budynku nie ma obecnej taryfy (np. 600/100 w MFH), weź pierwszą lepszą
   if (!currentBuildingConfig[state.tariff]) {
      state.tariff = Object.keys(currentBuildingConfig)[0];
   }
@@ -448,7 +455,6 @@ function render() {
       benefitsEl.innerHTML = benList.length ? benList.map(b => `<div style="margin-bottom:8px">${b}</div>`).join("") : '<div class="tiny">Brak</div>';
   }
 
-  // Bezpieczne wstawianie wartości breakdown
   const elBase = document.getElementById("bd-base");
   if(elBase) elBase.textContent = formatMoney(calc.base);
   
@@ -536,14 +542,14 @@ function bind() {
   if(buildChecked) state.building = buildChecked.value;
   
   const statusChecked = document.querySelector('input[name="status"]:checked');
-  if(statusChecked) state.status = statusChecked.value;
+  if(statusChecked) statusChecked.checked ? state.status = statusChecked.value : null;
 }
 
 async function init() {
   await loadPriceConfig();
   loadState(); 
   
-  // Próba odtworzenia checków
+  // Próba odtworzenia checków z zapisanego stanu
   const commNode = document.querySelector(`input[name="commitment"][value="${state.commitment}"]`);
   if(commNode) commNode.checked = true;
   
