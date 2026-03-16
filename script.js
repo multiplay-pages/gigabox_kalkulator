@@ -32,7 +32,7 @@ let priceConfig = {
   addons: {},
 };
 
-const STORAGE_KEY = "gigabox_calc_state_v8";
+const STORAGE_KEY = "gigabox_calc_state_v10";
 
 function byId(id) {
   return document.getElementById(id);
@@ -170,6 +170,10 @@ function validateState() {
 
   if (state.bannerPromo && state.promo === "none" && state.gift === "none") {
     state.bannerPromo = false;
+  }
+
+  if (state.tvCplusSport && state.tvCplusFilms) {
+    state.tvCplusFilms = false;
   }
 }
 
@@ -380,6 +384,15 @@ function syncControls() {
     if (el) el.checked = !!state[key];
   });
 
+  const canalSport = byId("tv-cplus-sport");
+  const canalFilms = byId("tv-cplus-films");
+  if (canalSport) {
+    canalSport.disabled = false;
+  }
+  if (canalFilms) {
+    canalFilms.disabled = false;
+  }
+
   const meshCount = byId("mesh-count");
   const meshLabel = byId("mesh-label");
   const multiroomCount = byId("multiroom-count");
@@ -453,12 +466,14 @@ function calculate() {
     : 0;
   const phoneMonthly = state.phone ? getAddonPrice("phoneNoLimit") : 0;
   const securityMonthly = getSecurityPrice(state.security);
-  const tvMonthly =
-    (state.tvMax ? getAddonPrice("tvMax") : 0) +
+  const canalMonthly =
     (state.tvCplusSport ? getAddonPrice("cplusSport") : 0) +
-    (state.tvCplusFilms ? getAddonPrice("cplusFilms") : 0) +
+    (state.tvCplusFilms ? getAddonPrice("cplusFilms") : 0);
+  const tvRecurringMonthly =
+    (state.tvMax ? getAddonPrice("tvMax") : 0) +
     (state.tvPvrM ? getAddonPrice("pvrM") : 0) +
     (state.tvPvrL ? getAddonPrice("pvrL") : 0);
+  const tvMonthly = tvRecurringMonthly + canalMonthly;
 
   const meshMonthlyUnit = getAddonPrice("wifiMonthly");
   const meshMonthly = state.meshCount * meshMonthlyUnit;
@@ -556,7 +571,21 @@ function calculate() {
   let totalCost = 0;
 
   for (let month = 1; month <= commitmentMonths; month += 1) {
-    let monthPrice = normalMonthly;
+    const canalCharge = month <= 12 ? canalMonthly : 0;
+    let monthPrice = Number(
+      (
+        base +
+        consentPenalty +
+        symmetricMonthly +
+        internetPlusMonthly +
+        phoneMonthly +
+        securityMonthly +
+        tvRecurringMonthly +
+        canalCharge +
+        meshMonthly +
+        multiroomMonthly
+      ).toFixed(2),
+    );
 
     if (month <= totalPromoMonths) {
       monthPrice = 1;
@@ -619,6 +648,18 @@ function calculate() {
     notes.push("Dodatkowy 1 mies. abonamentu za 1 zł po promocji.");
   if (state.phone) {
     notes.push("Aktywny dodatek: Telefon NoLimit 9,99 zł / mies.");
+  }
+  if (canalMonthly > 0) {
+    notes.push(
+      state.tvCplusSport
+        ? "Wybrano wariant Canal+: C+ Super Sport."
+        : "Wybrano wariant Canal+: C+ Seriale i Filmy.",
+    );
+    notes.push(
+      commitmentMonths > 12
+        ? "Canal+ jest liczony tylko przez 12 pierwszych miesięcy umowy."
+        : "Canal+ jest liczony przez 12 miesięcy — zgodnie z okresem umowy.",
+    );
   }
   if (
     state.symmetric &&
@@ -885,8 +926,6 @@ function bindStaticEvents() {
 
   [
     ["tv-max", "tvMax"],
-    ["tv-cplus-sport", "tvCplusSport"],
-    ["tv-cplus-films", "tvCplusFilms"],
     ["tv-pvr-m", "tvPvrM"],
     ["tv-pvr-l", "tvPvrL"],
   ].forEach(([id, key]) => {
@@ -897,6 +936,28 @@ function bindStaticEvents() {
       render();
     });
   });
+
+  const canalSport = byId("tv-cplus-sport");
+  if (canalSport) {
+    canalSport.addEventListener("change", () => {
+      state.tvCplusSport = !!canalSport.checked;
+      if (state.tvCplusSport) {
+        state.tvCplusFilms = false;
+      }
+      render();
+    });
+  }
+
+  const canalFilms = byId("tv-cplus-films");
+  if (canalFilms) {
+    canalFilms.addEventListener("change", () => {
+      state.tvCplusFilms = !!canalFilms.checked;
+      if (state.tvCplusFilms) {
+        state.tvCplusSport = false;
+      }
+      render();
+    });
+  }
 
   const promo = byId("promo");
   if (promo) {
