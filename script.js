@@ -7,6 +7,7 @@ const state = {
   marketing: true,
   symmetric: false,
   internetPlus: false,
+  phone: false,
   meshCount: 0,
   meshInstall: "self",
   multiroomCount: 0,
@@ -20,7 +21,7 @@ const state = {
   promo: "none",
   promoMonths: 1,
   gift: "none",
-  bannerPromo: false
+  bannerPromo: false,
 };
 
 let priceConfig = {
@@ -28,10 +29,10 @@ let priceConfig = {
   base: {},
   indefinite: {},
   installation: {},
-  addons: {}
+  addons: {},
 };
 
-const STORAGE_KEY = "gigabox_calc_state_v7";
+const STORAGE_KEY = "gigabox_calc_state_v8";
 
 function byId(id) {
   return document.getElementById(id);
@@ -117,11 +118,13 @@ function validateState() {
   const validBuilding = ["SFH", "MFH"];
   const validStatus = ["new", "current"];
 
-  if (!validCommitment.includes(String(state.commitment))) state.commitment = "24";
+  if (!validCommitment.includes(String(state.commitment)))
+    state.commitment = "24";
   if (!validBuilding.includes(String(state.building))) state.building = "SFH";
   if (!validStatus.includes(String(state.status))) state.status = "new";
 
-  const currentGroup = priceConfig?.base?.[state.commitment]?.[state.building] || {};
+  const currentGroup =
+    priceConfig?.base?.[state.commitment]?.[state.building] || {};
   if (!currentGroup[state.tariff]) {
     state.tariff = Object.keys(currentGroup)[0] || "1000/300";
   }
@@ -129,15 +132,17 @@ function validateState() {
   const securityKeys = Object.keys(priceConfig?.addons?.security || {});
   if (!securityKeys.includes(state.security)) state.security = "none";
 
-  const promoOptions = state.status === "new"
-    ? ["none", "6za1", "ztr", "powrot"]
-    : ["none", "retention"];
+  const promoOptions =
+    state.status === "new"
+      ? ["none", "6za1", "ztr", "powrot"]
+      : ["none", "retention"];
 
   if (!promoOptions.includes(state.promo)) state.promo = "none";
 
-  const giftOptions = state.status === "current"
-    ? ["none", "wifi12", "multiroom9", "router"]
-    : ["none"];
+  const giftOptions =
+    state.status === "current"
+      ? ["none", "wifi12", "multiroom9", "router"]
+      : ["none"];
 
   if (!giftOptions.includes(state.gift)) state.gift = "none";
 
@@ -146,7 +151,8 @@ function validateState() {
   state.multiroomCount = Math.max(0, toNumber(state.multiroomCount, 0));
 
   if (!["self", "tech"].includes(state.meshInstall)) state.meshInstall = "self";
-  if (!["self", "tech"].includes(state.multiroomInstall)) state.multiroomInstall = "self";
+  if (!["self", "tech"].includes(state.multiroomInstall))
+    state.multiroomInstall = "self";
 
   if (state.tariff === "2000/2000") {
     state.symmetric = false;
@@ -172,14 +178,20 @@ function renderTariffs() {
   const noteEl = byId("tariff-note");
   if (!container) return;
 
-  const currentGroup = priceConfig?.base?.[state.commitment]?.[state.building] || {};
-  const validTariffs = (priceConfig.tariffs || []).filter((item) => currentGroup[item.id] !== undefined);
+  const currentGroup =
+    priceConfig?.base?.[state.commitment]?.[state.building] || {};
+  const validTariffs = (priceConfig.tariffs || []).filter(
+    (item) => currentGroup[item.id] !== undefined,
+  );
 
-  container.innerHTML = validTariffs.map((item) => {
-    const checked = item.id === state.tariff ? "checked" : "";
-    const pill = item.includedSym ? '<span class="pill success">symetryczne w cenie</span>' : "";
+  container.innerHTML = validTariffs
+    .map((item) => {
+      const checked = item.id === state.tariff ? "checked" : "";
+      const pill = item.includedSym
+        ? '<span class="pill success">symetryczne w cenie</span>'
+        : "";
 
-    return `
+      return `
       <label class="choice">
         <input type="radio" name="tariff" value="${item.id}" ${checked}>
         <span class="card">
@@ -189,7 +201,8 @@ function renderTariffs() {
         </span>
       </label>
     `;
-  }).join("");
+    })
+    .join("");
 
   qsa('input[name="tariff"]', container).forEach((input) => {
     input.addEventListener("change", () => {
@@ -230,14 +243,15 @@ function renderPromoControls() {
   const bannerNote = byId("banner-note");
 
   if (promoSelect) {
-    promoSelect.innerHTML = state.status === "new"
-      ? `
+    promoSelect.innerHTML =
+      state.status === "new"
+        ? `
           <option value="none">Brak promocji głównej</option>
           <option value="6za1">6 za 1 / 3 za 1</option>
           <option value="ztr">ZTR 2026</option>
           <option value="powrot">Powrót do Multiplay</option>
         `
-      : `
+        : `
           <option value="none">Brak promocji głównej</option>
           <option value="retention">Promocja Utrzymaniowa</option>
         `;
@@ -245,14 +259,15 @@ function renderPromoControls() {
   }
 
   if (giftSelect) {
-    giftSelect.innerHTML = state.status === "current"
-      ? `
+    giftSelect.innerHTML =
+      state.status === "current"
+        ? `
           <option value="none">Brak dodatkowego benefitu</option>
           <option value="wifi12">WiFi Premium za 1 zł przez 12 mies.</option>
           <option value="multiroom9">Multiroom: 1 dekoder za 1 zł przez 9 mies.</option>
           <option value="router">Wymiana routera</option>
         `
-      : `
+        : `
           <option value="none">Brak dodatkowego benefitu</option>
         `;
     giftSelect.value = state.gift;
@@ -260,35 +275,47 @@ function renderPromoControls() {
   }
 
   const showPromoMonths = ["ztr", "powrot", "retention"].includes(state.promo);
-  if (promoMonthsWrap) promoMonthsWrap.style.display = showPromoMonths ? "block" : "none";
+  if (promoMonthsWrap)
+    promoMonthsWrap.style.display = showPromoMonths ? "block" : "none";
   if (promoMonthsInput) promoMonthsInput.value = String(state.promoMonths);
   if (promoMonthsLabel) {
-    promoMonthsLabel.textContent = state.promo === "retention"
-      ? "Ilość miesięcy promocyjnych (do 1zł):"
-      : "Pozostałe miesiące u obecnego operatora:";
+    promoMonthsLabel.textContent =
+      state.promo === "retention"
+        ? "Ilość miesięcy promocyjnych (do 1zł):"
+        : "Pozostałe miesiące u obecnego operatora:";
   }
 
   if (promoNote) {
     let text = "Brak promocji głównej.";
-    if (state.promo === "6za1") text = state.commitment === "24" ? "6 mies. za 1 zł." : "3 mies. za 1 zł.";
-    if (state.promo === "ztr") text = `ZTR 2026: ${Math.min(state.promoMonths, 12)} mies. za 1 zł.`;
-    if (state.promo === "powrot") text = `Powrót do Multiplay: ${Math.min(state.promoMonths + 3, 24)} mies. za 1 zł + instalacja za 1 zł.`;
-    if (state.promo === "retention") text = `Promocja Utrzymaniowa: ${state.promoMonths} mies. do 1 zł.`;
+    if (state.promo === "6za1")
+      text =
+        state.commitment === "24" ? "6 mies. za 1 zł." : "3 mies. za 1 zł.";
+    if (state.promo === "ztr")
+      text = `ZTR 2026: ${Math.min(state.promoMonths, 12)} mies. za 1 zł.`;
+    if (state.promo === "powrot")
+      text = `Powrót do Multiplay: ${Math.min(state.promoMonths + 3, 24)} mies. za 1 zł + instalacja za 1 zł.`;
+    if (state.promo === "retention")
+      text = `Promocja Utrzymaniowa: ${state.promoMonths} mies. do 1 zł.`;
     promoNote.style.display = "block";
     promoNote.textContent = text;
   }
 
   if (giftNote) {
     if (state.status !== "current") {
-      giftNote.textContent = "Benefity odnowieniowe są przeznaczone dla obecnych klientów i mogą wymagać dodatkowego potwierdzenia w systemie.";
+      giftNote.textContent =
+        "Benefity odnowieniowe są przeznaczone dla obecnych klientów i mogą wymagać dodatkowego potwierdzenia w systemie.";
     } else if (state.gift === "wifi12") {
-      giftNote.textContent = "Benefit: WiFi Premium za 1 zł przez 12 mies. dla wybranych urządzeń MESH.";
+      giftNote.textContent =
+        "Benefit: WiFi Premium za 1 zł przez 12 mies. dla wybranych urządzeń MESH.";
     } else if (state.gift === "multiroom9") {
-      giftNote.textContent = "Benefit: opłata za 1 dekoder Multiroom spada do 1 zł / mies. przez 9 mies. Pozostałe dekodery są liczone standardowo.";
+      giftNote.textContent =
+        "Benefit: opłata za 1 dekoder Multiroom spada do 1 zł / mies. przez 9 mies. Pozostałe dekodery są liczone standardowo.";
     } else if (state.gift === "router") {
-      giftNote.textContent = "Benefit: wymiana routera. To benefit pozacenowy — nie zmienia miesięcznego abonamentu.";
+      giftNote.textContent =
+        "Benefit: wymiana routera. To benefit pozacenowy — nie zmienia miesięcznego abonamentu.";
     } else {
-      giftNote.textContent = "Benefity odnowieniowe są przeznaczone dla obecnych klientów i mogą wymagać dodatkowego potwierdzenia w systemie.";
+      giftNote.textContent =
+        "Benefity odnowieniowe są przeznaczone dla obecnych klientów i mogą wymagać dodatkowego potwierdzenia w systemie.";
     }
   }
 
@@ -323,6 +350,7 @@ function syncControls() {
   const marketing = byId("consent-marketing");
   const symmetric = byId("addon-sym");
   const internetPlus = byId("addon-internetplus");
+  const phone = byId("addon-phone");
   const meshInstall = byId("mesh-install");
   const security = byId("security");
   const multiroomInstall = byId("multiroom-install");
@@ -334,6 +362,7 @@ function syncControls() {
     symmetric.disabled = state.tariff === "2000/2000";
   }
   if (internetPlus) internetPlus.checked = !!state.internetPlus;
+  if (phone) phone.checked = !!state.phone;
   if (meshInstall) meshInstall.value = state.meshInstall;
   if (security) security.value = state.security;
   if (multiroomInstall) multiroomInstall.value = state.multiroomInstall;
@@ -343,7 +372,7 @@ function syncControls() {
     ["tv-cplus-sport", "tvCplusSport"],
     ["tv-cplus-films", "tvCplusFilms"],
     ["tv-pvr-m", "tvPvrM"],
-    ["tv-pvr-l", "tvPvrL"]
+    ["tv-pvr-l", "tvPvrL"],
   ];
 
   tvMap.forEach(([id, key]) => {
@@ -362,7 +391,8 @@ function syncControls() {
   if (meshCount) meshCount.textContent = String(state.meshCount);
   if (meshLabel) meshLabel.textContent = `${state.meshCount} szt.`;
   if (multiroomCount) multiroomCount.textContent = String(state.multiroomCount);
-  if (multiroomLabel) multiroomLabel.textContent = `${state.multiroomCount} szt.`;
+  if (multiroomLabel)
+    multiroomLabel.textContent = `${state.multiroomCount} szt.`;
 
   const tariffMeta = getTariffMeta(state.tariff);
   const meshAllowed = tariffMeta ? tariffMeta.wifi !== false : true;
@@ -373,9 +403,12 @@ function syncControls() {
   const symLabel = byId("sym-label");
   const symPill = byId("sym-pill");
   if (symLabel) {
-    symLabel.textContent = state.tariff === "2000/2000"
-      ? "w cenie"
-      : (state.status === "current" ? "5 zł / mies." : "10 zł / mies.");
+    symLabel.textContent =
+      state.tariff === "2000/2000"
+        ? "w cenie"
+        : state.status === "current"
+          ? "5 zł / mies."
+          : "10 zł / mies.";
   }
   if (symPill) {
     if (state.tariff === "2000/2000") {
@@ -392,48 +425,71 @@ function syncControls() {
 }
 
 function calculate() {
-  const base = toNumber(priceConfig?.base?.[state.commitment]?.[state.building]?.[state.tariff], 0) / 100;
-  const afterIndefinite = toNumber(priceConfig?.indefinite?.[state.tariff], 0) / 100;
-  const installationStandard = state.status === "new"
-    ? toNumber(priceConfig?.installation?.[state.tariff], 0) / 100
+  const base =
+    toNumber(
+      priceConfig?.base?.[state.commitment]?.[state.building]?.[state.tariff],
+      0,
+    ) / 100;
+  const afterIndefinite =
+    toNumber(priceConfig?.indefinite?.[state.tariff], 0) / 100;
+  const installationStandard =
+    state.status === "new"
+      ? toNumber(priceConfig?.installation?.[state.tariff], 0) / 100
+      : 0;
+
+  const consentPenalty =
+    (!state.ebill ? getAddonPrice("consentEbill") : 0) +
+    (!state.marketing ? getAddonPrice("consentMarketingDisplay") : 0);
+
+  const symmetricMonthly =
+    state.symmetric && state.tariff !== "2000/2000"
+      ? state.status === "current"
+        ? getAddonPrice("symmetricCurrentPreview")
+        : getAddonPrice("symmetricNew")
+      : 0;
+
+  const internetPlusMonthly = state.internetPlus
+    ? getAddonPrice("internetPlus")
     : 0;
-
-  const consentPenalty = (!state.ebill ? getAddonPrice("consentEbill") : 0)
-    + (!state.marketing ? getAddonPrice("consentMarketingDisplay") : 0);
-
-  const symmetricMonthly = state.symmetric && state.tariff !== "2000/2000"
-    ? (state.status === "current" ? getAddonPrice("symmetricCurrentPreview") : getAddonPrice("symmetricNew"))
-    : 0;
-
-  const internetPlusMonthly = state.internetPlus ? getAddonPrice("internetPlus") : 0;
+  const phoneMonthly = state.phone ? getAddonPrice("phoneNoLimit") : 0;
   const securityMonthly = getSecurityPrice(state.security);
   const tvMonthly =
-    (state.tvMax ? getAddonPrice("tvMax") : 0)
-    + (state.tvCplusSport ? getAddonPrice("cplusSport") : 0)
-    + (state.tvCplusFilms ? getAddonPrice("cplusFilms") : 0)
-    + (state.tvPvrM ? getAddonPrice("pvrM") : 0)
-    + (state.tvPvrL ? getAddonPrice("pvrL") : 0);
+    (state.tvMax ? getAddonPrice("tvMax") : 0) +
+    (state.tvCplusSport ? getAddonPrice("cplusSport") : 0) +
+    (state.tvCplusFilms ? getAddonPrice("cplusFilms") : 0) +
+    (state.tvPvrM ? getAddonPrice("pvrM") : 0) +
+    (state.tvPvrL ? getAddonPrice("pvrL") : 0);
 
   const meshMonthlyUnit = getAddonPrice("wifiMonthly");
   const meshMonthly = state.meshCount * meshMonthlyUnit;
   const multiroomMonthlyUnit = getAddonPrice("multiroomMonthly");
   const multiroomMonthly = state.multiroomCount * multiroomMonthlyUnit;
 
-  const normalMonthly = Number((
-    base
-    + consentPenalty
-    + symmetricMonthly
-    + internetPlusMonthly
-    + securityMonthly
-    + tvMonthly
-    + meshMonthly
-    + multiroomMonthly
-  ).toFixed(2));
+  const normalMonthly = Number(
+    (
+      base +
+      consentPenalty +
+      symmetricMonthly +
+      internetPlusMonthly +
+      phoneMonthly +
+      securityMonthly +
+      tvMonthly +
+      meshMonthly +
+      multiroomMonthly
+    ).toFixed(2),
+  );
 
   const meshActivation = state.meshCount * getAddonPrice("wifiActivation");
-  const multiroomActivation = state.multiroomCount * getAddonPrice("multiroomActivation");
-  const meshTech = state.meshCount > 0 && state.meshInstall === "tech" ? getAddonPrice("techVisit") : 0;
-  const multiroomTech = state.multiroomCount > 0 && state.multiroomInstall === "tech" ? getAddonPrice("techVisit") : 0;
+  const multiroomActivation =
+    state.multiroomCount * getAddonPrice("multiroomActivation");
+  const meshTech =
+    state.meshCount > 0 && state.meshInstall === "tech"
+      ? getAddonPrice("techVisit")
+      : 0;
+  const multiroomTech =
+    state.multiroomCount > 0 && state.multiroomInstall === "tech"
+      ? getAddonPrice("techVisit")
+      : 0;
   const tech = meshTech + multiroomTech;
 
   const commitmentMonths = toNumber(state.commitment, 24);
@@ -454,7 +510,10 @@ function calculate() {
       promoLabel = "ZTR 2026";
       promoNote = `Abonament za 1 zł przez ${promoMonths} mies.`;
     } else if (state.promo === "powrot") {
-      promoMonths = Math.min(commitmentMonths, Math.min(state.promoMonths + 3, 24));
+      promoMonths = Math.min(
+        commitmentMonths,
+        Math.min(state.promoMonths + 3, 24),
+      );
       promoLabel = "Powrót do Multiplay";
       promoNote = `Abonament za 1 zł przez ${promoMonths} mies. + instalacja za 1 zł.`;
       installation = 1;
@@ -468,21 +527,30 @@ function calculate() {
 
     if (state.gift === "wifi12" && state.meshCount > 0) {
       giftLabel = "WiFi Premium 1 zł / 12 mies.";
-      giftNote = "Dla urządzeń MESH opłata miesięczna spada do 1 zł / szt. przez 12 mies.";
+      giftNote =
+        "Dla urządzeń MESH opłata miesięczna spada do 1 zł / szt. przez 12 mies.";
     } else if (state.gift === "multiroom9" && state.multiroomCount > 0) {
       giftLabel = "Multiroom 1 zł / 9 mies.";
-      giftNote = "Opłata za 1 dekoder Multiroom spada do 1 zł / mies. przez 9 mies. Pozostałe dekodery są liczone standardowo.";
+      giftNote =
+        "Opłata za 1 dekoder Multiroom spada do 1 zł / mies. przez 9 mies. Pozostałe dekodery są liczone standardowo.";
     } else if (state.gift === "router") {
       giftLabel = "Wymiana routera";
       giftNote = "Benefit pozacenowy — bez wpływu na abonament miesięczny.";
     } else if (state.gift === "multiroom9") {
       giftLabel = "Multiroom 1 zł / 9 mies.";
-      giftNote = "Benefit jest dostępny po dodaniu co najmniej 1 dekodera Multiroom.";
+      giftNote =
+        "Benefit jest dostępny po dodaniu co najmniej 1 dekodera Multiroom.";
     }
   }
 
-  const bannerMonths = state.bannerPromo && (state.promo !== "none" || state.gift !== "none") ? 1 : 0;
-  const totalPromoMonths = Math.min(commitmentMonths, promoMonths + bannerMonths);
+  const bannerMonths =
+    state.bannerPromo && (state.promo !== "none" || state.gift !== "none")
+      ? 1
+      : 0;
+  const totalPromoMonths = Math.min(
+    commitmentMonths,
+    promoMonths + bannerMonths,
+  );
 
   const schedule = [];
   let totalCost = 0;
@@ -492,9 +560,19 @@ function calculate() {
 
     if (month <= totalPromoMonths) {
       monthPrice = 1;
-    } else if (state.status === "current" && state.gift === "wifi12" && state.meshCount > 0 && month <= 12) {
+    } else if (
+      state.status === "current" &&
+      state.gift === "wifi12" &&
+      state.meshCount > 0 &&
+      month <= 12
+    ) {
       monthPrice = monthPrice - meshMonthly + state.meshCount;
-    } else if (state.status === "current" && state.gift === "multiroom9" && state.multiroomCount > 0 && month <= 9) {
+    } else if (
+      state.status === "current" &&
+      state.gift === "multiroom9" &&
+      state.multiroomCount > 0 &&
+      month <= 9
+    ) {
       monthPrice = monthPrice - multiroomMonthlyUnit + 1;
     }
 
@@ -520,7 +598,9 @@ function calculate() {
   }
 
   const averageMonthly = Number((totalCost / commitmentMonths).toFixed(2));
-  let savings = Number(((normalMonthly * commitmentMonths) - totalCost).toFixed(2));
+  let savings = Number(
+    (normalMonthly * commitmentMonths - totalCost).toFixed(2),
+  );
   if (state.status === "new" && state.promo === "powrot") {
     savings += Number((installationStandard - installation).toFixed(2));
   }
@@ -528,15 +608,26 @@ function calculate() {
 
   const badges = [];
   if (promoLabel) badges.push({ text: promoLabel, className: "pill success" });
-  if (state.bannerPromo && bannerMonths > 0) badges.push({ text: "Promocja Banerowa", className: "pill" });
+  if (state.bannerPromo && bannerMonths > 0)
+    badges.push({ text: "Promocja Banerowa", className: "pill" });
   if (giftLabel) badges.push({ text: giftLabel, className: "pill warning" });
 
   const notes = [];
   if (promoNote) notes.push(promoNote);
   if (giftNote) notes.push(giftNote);
-  if (state.bannerPromo && bannerMonths > 0) notes.push("Dodatkowy 1 mies. abonamentu za 1 zł po promocji.");
-  if (state.symmetric && state.status === "current" && state.tariff !== "2000/2000") {
-    notes.push("Łącze symetryczne dla obecnego klienta liczone preview 5 zł / mies.");
+  if (state.bannerPromo && bannerMonths > 0)
+    notes.push("Dodatkowy 1 mies. abonamentu za 1 zł po promocji.");
+  if (state.phone) {
+    notes.push("Aktywny dodatek: Telefon NoLimit 9,99 zł / mies.");
+  }
+  if (
+    state.symmetric &&
+    state.status === "current" &&
+    state.tariff !== "2000/2000"
+  ) {
+    notes.push(
+      "Łącze symetryczne dla obecnego klienta liczone preview 5 zł / mies.",
+    );
   }
   if (notes.length === 0) {
     notes.push("Brak dodatkowych uwag.");
@@ -546,7 +637,12 @@ function calculate() {
     base,
     afterIndefinite,
     consentPenalty,
-    addonsMonthly: symmetricMonthly + internetPlusMonthly + securityMonthly + multiroomMonthly,
+    addonsMonthly:
+      symmetricMonthly +
+      internetPlusMonthly +
+      phoneMonthly +
+      securityMonthly +
+      multiroomMonthly,
     tvMonthly,
     meshMonthly,
     installation,
@@ -558,27 +654,61 @@ function calculate() {
     groupedSchedule,
     savings,
     badges,
-    notes
+    notes,
   };
 }
 
 function renderSummary(calc) {
   setText("summary-monthly", money(calc.monthly));
-  setText("summary-start", money(calc.installation + calc.multiroomActivation + calc.meshActivation + calc.tech));
+  setText(
+    "summary-start",
+    money(
+      calc.installation +
+        calc.multiroomActivation +
+        calc.meshActivation +
+        calc.tech,
+    ),
+  );
 
   setText("sum-commitment", `${state.commitment} miesięcy`);
-  setText("sum-building", state.building === "SFH" ? "Domek (SFH)" : "Blok (MFH)");
-  setText("sum-status", state.status === "new" ? "Nowy klient" : "Obecny klient");
+  setText(
+    "sum-building",
+    state.building === "SFH" ? "Domek (SFH)" : "Blok (MFH)",
+  );
+  setText(
+    "sum-status",
+    state.status === "new" ? "Nowy klient" : "Obecny klient",
+  );
   setText("sum-tariff", state.tariff);
   setText("sum-base", money(calc.base));
-  setText("sum-consents", calc.consentPenalty > 0 ? `+ ${money(calc.consentPenalty)}` : "0,00 zł");
-  setText("sum-addons", calc.addonsMonthly > 0 ? `+ ${money(calc.addonsMonthly)}` : "0,00 zł");
-  setText("sum-tv", calc.tvMonthly > 0 ? `+ ${money(calc.tvMonthly)}` : "0,00 zł");
+  setText(
+    "sum-consents",
+    calc.consentPenalty > 0 ? `+ ${money(calc.consentPenalty)}` : "0,00 zł",
+  );
+  setText(
+    "sum-addons",
+    calc.addonsMonthly > 0 ? `+ ${money(calc.addonsMonthly)}` : "0,00 zł",
+  );
+  setText(
+    "sum-tv",
+    calc.tvMonthly > 0 ? `+ ${money(calc.tvMonthly)}` : "0,00 zł",
+  );
   setText("sum-mesh-count", `${state.meshCount}x`);
-  setText("sum-mesh", calc.meshMonthly > 0 ? `+ ${money(calc.meshMonthly)}` : "0,00 zł");
+  setText(
+    "sum-mesh",
+    calc.meshMonthly > 0 ? `+ ${money(calc.meshMonthly)}` : "0,00 zł",
+  );
   setText("sum-installation", money(calc.installation));
-  setText("sum-activation", calc.multiroomActivation > 0 ? `+ ${money(calc.multiroomActivation)}` : "0,00 zł");
-  setText("sum-mesh-activation", calc.meshActivation > 0 ? `+ ${money(calc.meshActivation)}` : "0,00 zł");
+  setText(
+    "sum-activation",
+    calc.multiroomActivation > 0
+      ? `+ ${money(calc.multiroomActivation)}`
+      : "0,00 zł",
+  );
+  setText(
+    "sum-mesh-activation",
+    calc.meshActivation > 0 ? `+ ${money(calc.meshActivation)}` : "0,00 zł",
+  );
   setText("sum-tech", calc.tech > 0 ? `+ ${money(calc.tech)}` : "0,00 zł");
 
   setText("after-indefinite", `${money(calc.afterIndefinite)} / mies.`);
@@ -589,23 +719,32 @@ function renderSummary(calc) {
   setHTML(
     "summary-badges",
     calc.badges.length > 0
-      ? calc.badges.map((badge) => `<span class="${badge.className}">${badge.text}</span>`).join("")
-      : '<span class="pill">Brak aktywnej promocji</span>'
+      ? calc.badges
+          .map(
+            (badge) => `<span class="${badge.className}">${badge.text}</span>`,
+          )
+          .join("")
+      : '<span class="pill">Brak aktywnej promocji</span>',
   );
 
   setHTML(
     "promo-schedule",
     calc.groupedSchedule.length > 0
-      ? calc.groupedSchedule.map((row) => {
-          const range = row.start === row.end ? `${row.start}` : `${row.start}–${row.end}`;
-          return `
+      ? calc.groupedSchedule
+          .map((row) => {
+            const range =
+              row.start === row.end
+                ? `${row.start}`
+                : `${row.start}–${row.end}`;
+            return `
             <div class="schedule-row">
               <span class="schedule-range">mies. ${range}</span>
               <strong class="schedule-price">${money(row.price)}</strong>
             </div>
           `;
-        }).join("")
-      : '<div class="schedule-row"><span class="schedule-range">brak aktywnej promocji abonamentowej</span><strong class="schedule-price">—</strong></div>'
+          })
+          .join("")
+      : '<div class="schedule-row"><span class="schedule-range">brak aktywnej promocji abonamentowej</span><strong class="schedule-price">—</strong></div>',
   );
 }
 
@@ -660,7 +799,8 @@ function bindStaticEvents() {
   const symmetric = byId("addon-sym");
   if (symmetric) {
     symmetric.addEventListener("change", () => {
-      state.symmetric = state.tariff === "2000/2000" ? false : !!symmetric.checked;
+      state.symmetric =
+        state.tariff === "2000/2000" ? false : !!symmetric.checked;
       render();
     });
   }
@@ -669,6 +809,14 @@ function bindStaticEvents() {
   if (internetPlus) {
     internetPlus.addEventListener("change", () => {
       state.internetPlus = !!internetPlus.checked;
+      render();
+    });
+  }
+
+  const phone = byId("addon-phone");
+  if (phone) {
+    phone.addEventListener("change", () => {
+      state.phone = !!phone.checked;
       render();
     });
   }
@@ -740,7 +888,7 @@ function bindStaticEvents() {
     ["tv-cplus-sport", "tvCplusSport"],
     ["tv-cplus-films", "tvCplusFilms"],
     ["tv-pvr-m", "tvPvrM"],
-    ["tv-pvr-l", "tvPvrL"]
+    ["tv-pvr-l", "tvPvrL"],
   ].forEach(([id, key]) => {
     const el = byId(id);
     if (!el) return;
