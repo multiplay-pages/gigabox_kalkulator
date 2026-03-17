@@ -443,7 +443,7 @@ function calculate() {
       priceConfig?.base?.[state.commitment]?.[state.building]?.[state.tariff],
       0,
     ) / 100;
-  const afterIndefinite =
+  const afterIndefiniteBase =
     toNumber(priceConfig?.indefinite?.[state.tariff], 0) / 100;
   const installationStandard =
     state.status === "new"
@@ -489,6 +489,20 @@ function calculate() {
       phoneMonthly +
       securityMonthly +
       tvMonthly +
+      meshMonthly +
+      multiroomMonthly
+    ).toFixed(2),
+  );
+
+  const afterIndefinite = Number(
+    (
+      afterIndefiniteBase +
+      consentPenalty +
+      symmetricMonthly +
+      internetPlusMonthly +
+      phoneMonthly +
+      securityMonthly +
+      tvRecurringMonthly +
       meshMonthly +
       multiroomMonthly
     ).toFixed(2),
